@@ -1,0 +1,9 @@
+
+<div ng-controller="galleryController" id="main-gallery">
+	<div id="farmDetails">
+		<h3>Farm Details -</h3>
+		 <label>Farm Name:</label><span> {{farmName}}</span></br>
+		<label>Number of Fields:</label><span> {{fieldCount}}</span>
+	</div>
+	 <ng-gallery images="images" ng-if="images.length"></ng-gallery>
+</div>

@@ -1,0 +1,31 @@
+<!-- {{_flights}}
+<div ng-controller="ctrl">
+	<tr>
+	    <td ng-repeat="col in _$columns">
+	        <a ng-if="$first" href="" ng-click="_flight.expanded = !_flight.expanded">
+	            <i class="fa" ng-class="{ 'fa-chevron-right': !_flight.expanded, 'fa-chevron-down': _flight.expanded }"/>
+	        </a>
+	        <label ng-if="col.field == 'start'">{{_flight[col.field]*1000 | date:'short'}}</label>
+	        <label ng-if="col.field !== 'start'">{{_flight[col.field]}}</label>
+	    </td>
+	</tr>
+	<tr ng-if="_flight.expanded">
+	    <td ng-repeat="col in _$columns track by $index">
+	        <div class="col-md-8">
+	            <div class="col-md-6">
+	                <div class="line-height" ng-repeat="displayField in col.displaygroup.stats">
+	                    {{displayField | uppercase}} - {{_flight[displayField]}}
+	                </div>
+	            </div>
+	            <div class="col-md-6">                                    
+	                <div class="line-height" ng-repeat="link in col.displaygroup.links">
+	                    <a ng-href="{{_flight[link + 'Url']}}" download>{{link |
+	                        uppercase}} <i class="fa fa-download" aria-hidden="true"></i>
+	                    </a>
+	                </div>
+	            </div>
+	        </div>
+	        <img ng-if="$last" ng-src="{{_flight.previewUrl}}" />
+	    </td>
+	</tr>
+</div> -->

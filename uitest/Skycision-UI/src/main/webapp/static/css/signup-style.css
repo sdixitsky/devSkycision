@@ -1,0 +1,685 @@
+/* -------------------------------- 
+
+Primary style
+
+-------------------------------- */
+
+html * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-size: 12px;
+    overflow: hidden;
+}
+
+*,
+*:after,
+*:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    /*color: #2f889a;*/
+    color: #4EA699;
+    text-decoration: none;
+}
+
+a:hover, a strong {
+    cursor: pointer !important;
+}
+
+img {
+    max-width: 100%;
+}
+
+input::-ms-clear,
+textarea::-ms-clear {
+    display: none;
+}
+
+
+/* SD */
+
+.terms {
+    padding-bottom: 2px;
+    vertical-align: middle;
+}
+.terms span {
+    cursor: pointer !important;
+}
+
+
+/* -------------------------------- 
+
+Main components 
+
+-------------------------------- */
+
+header[role=banner] {
+    position: fixed;
+    height: 50px;
+    background: #2C3136;
+    width: 100%;
+    float: none;
+}
+
+header[role=banner] #cd-logo {
+    float: left;
+    margin: 4px 0 0 5%;
+    /* reduce logo size on mobile and make sure it is left aligned with the transform-origin property */
+    -webkit-transform-origin: 0 50%;
+    -moz-transform-origin: 0 50%;
+    -ms-transform-origin: 0 50%;
+    -o-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    transform: scale(0.8);
+}
+
+header[role=banner] #cd-logo img {
+    display: block;
+    height: 30px;
+}
+
+header[role=banner]::after {
+    /* clearfix */
+    content: '';
+    display: table;
+    clear: both;
+}
+
+#signup input .ng-invalid-required {
+    display: inline-block;
+    position: absolute;
+    left: -5px;
+    bottom: -35px;
+    background: rgba(215, 102, 102, 0.9);
+    /*background-color: #4EA699;*/
+    padding: .8em;
+    z-index: 2;
+    color: #FFF;
+    border-radius: 0.25em;
+    /* prevent click and touch events */
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s 0, visibility 0 0.2s;
+    -moz-transition: opacity 0.2s 0, visibility 0 0.2s;
+    transition: opacity 0.2s 0, visibility 0 0.2s;
+}
+
+.main-nav {
+    float: right;
+    margin-right: 5%;
+    width: 44px;
+    height: 100%;
+    background: url("../img/cd-icon-menu.svg") no-repeat center center;
+    cursor: pointer;
+}
+
+.main-nav ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-padding-start: 0;
+    -webkit-margin-before: 0;
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    transform: translateY(-100%);
+}
+
+.main-nav ul.is-visible {
+    -webkit-transform: translateY(50px);
+    -moz-transform: translateY(50px);
+    -ms-transform: translateY(50px);
+    -o-transform: translateY(50px);
+    transform: translateY(50px);
+}
+
+.main-nav a {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 5%;
+    background: #292a34;
+    border-top: 1px solid #3b3d4b;
+    color: #FFF;
+}
+
+
+/* -------------------------------- 
+
+xsigin/signup popup 
+
+-------------------------------- */
+
+.cd-user-modal {
+    position: absolute;
+    /* top: 0;
+  left: 0; */
+    width: 100%;
+    height: 100%;
+    /*background: url('https://www.skycision.com/static/img/parallax/img3.jpg');*/
+    background-color: #E3E4E5;
+    /* z-index: -3; */
+    background-color: ;
+    overflow: auto;
+    /*cursor: pointer;*/
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s, visibility 0.3s;
+    -moz-transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.3s, visibility 0.3s;
+    top: 80px;
+}
+
+.cd-user-modal.is-visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.cd-user-modal.is-visible .cd-user-modal-container {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+}
+
+.cd-user-modal-container {
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    background: #FFF;
+    margin: 3em auto 4em;
+    cursor: auto;
+    border-radius: 0.5em;
+    -webkit-transform: translateY(-30px);
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    -o-transform: translateY(-30px);
+    transform: translateY(-30px);
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    transition-property: transform;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+.cd-user-modal-container .cd-switcher:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.cd-user-modal-container .cd-switcher li {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.cd-user-modal-container .cd-switcher li:first-child a {
+    border-radius: .5em 0 0 0;
+}
+
+.cd-user-modal-container .cd-switcher li:last-child a {
+    border-radius: 0 .5em 0 0;
+}
+
+.cd-user-modal-container .cd-switcher a {
+    display: block;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background: #d2d8d8;
+    color: #809191;
+    font-size: 1.5rem;
+}
+
+.cd-user-modal-container .cd-switcher a.selected {
+    background: #FFF;
+    color: #505260;
+}
+
+.cd-form {
+    padding: 1.4em;
+}
+
+.cd-form .fieldset {
+    position: relative;
+    margin: 1.4em 0;
+}
+
+.cd-form .fieldset:first-child {
+    margin-top: 0;
+}
+
+.cd-form .fieldset:last-child {
+    margin-bottom: 0;
+}
+
+.cd-form label.image-replace {
+    /* replace text with an icon */
+    display: inline-block;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    bottom: auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    height: 20px;
+    width: 20px;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    color: transparent;
+    text-shadow: none;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+}
+
+.cd-form label.cd-username {
+    background-image: url("../img/cd-icon-username.svg");
+}
+
+.cd-form label.cd-email {
+    background-image: url("../img/cd-icon-email.svg");
+}
+
+.cd-form label.cd-password {
+    background-image: url("../img/cd-icon-password.svg");
+}
+
+.cd-form input {
+    margin: 0;
+    padding: 0;
+    border-radius: 0.25em;
+    font-size: 12px;
+}
+
+.cd-form input.full-width, .cd-form button.full-width {
+    width: 100%;
+}
+.cd-form button.full-width span{
+    padding-right:5px;
+    cursor: pointer;
+}
+.cd-form button.full-width i{
+    font-size:1.6rem;
+}
+.cd-form input.has-padding {
+    padding: 12px 20px 12px 50px;
+}
+
+.cd-form input.has-border {
+    border: 1px solid #d2d8d8;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
+
+.cd-form input.has-border:focus {
+    border-color: #66afe9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+    outline: none;
+}
+
+.cd-form input.has-error,
+{
+    border: 1px solid #d76666;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.cd-form input[type=password] {
+    /* space left for the HIDE button */
+    padding-right: 65px;
+}
+
+.cd-form input[type=submit], #cd-login .cd-form button,
+#cd-signup .cd-form button {
+    padding: 16px 0;
+    cursor: pointer;
+    /*background: #2f889a;*/
+    background: #4EA699;
+    color: #FFF;
+    font-weight: bold;
+    -webkit-box-shadow: none;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    cursor:pointer !important;
+}
+
+.no-touch .cd-form input[type=submit]:hover,
+.no-touch .cd-form input[type=submit]:focus {
+    background: #3599ae;
+    outline: none;
+}
+
+.cd-form .hide-password {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 6px 15px;
+    border-left: 1px solid #d2d8d8;
+    top: 50%;
+    bottom: auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #343642;
+}
+
+.cd-form .cd-error-message,
+input .ng-invalid {
+    display: inline-block;
+    position: absolute;
+    left: -5px;
+    bottom: -35px;
+    background: rgba(215, 102, 102, 0.9);
+    padding: .8em;
+    z-index: 2;
+    color: #FFF;
+    border-radius: 0.25em;
+    /* prevent click and touch events */
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s 0, visibility 0 0.2s;
+    -moz-transition: opacity 0.2s 0, visibility 0 0.2s;
+    transition: opacity 0.2s 0, visibility 0 0.2s;
+}
+
+.cd-form .cd-error-message::after {
+    /* triangle */
+    content: '';
+    position: absolute;
+    left: 22px;
+    bottom: 100%;
+    height: 0;
+    width: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(215, 102, 102, 0.9);
+}
+
+.cd-form .cd-error-message.is-visible {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transition: opacity 0.2s 0, visibility 0 0;
+    -moz-transition: opacity 0.2s 0, visibility 0 0;
+    transition: opacity 0.2s 0, visibility 0 0;
+}
+
+.cd-form-message {
+    padding: 1.4em 1.4em 0;
+    line-height: 1.4;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cd-form-bottom-message {
+    /* position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: -30px;*/
+    text-align: center;
+    color: #000;
+    padding-bottom: 10px;
+}
+
+.cd-form-bottom-message a {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.cd-close-form {
+    /* form X button on top right */
+    display: block;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    right: 0;
+    top: -40px;
+    background: url("../img/cd-icon-close.svg") no-repeat center center;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#cd-termsCond {
+    padding-bottom: 30px;
+}
+
+#cd-login,
+#cd-signup,
+#cd-reset-password,
+#cd-verify,
+#cd-termsCond,
+#cd-confirm-reset {
+    display: none;
+}
+
+#cd-login.is-selected,
+#cd-signup.is-selected,
+#cd-reset-password.is-selected,
+#cd-verify.is-selected,
+#cd-termsCond.is-selected,
+#cd-confirm-reset.is-selected {
+    display: block;
+}
+
+.cd-form #givenName.ng-invalid.ng-dirty,
+.cd-form #familyName.ng-invalid.ng-dirty,
+.cd-form #userName.ng-invalid.ng-dirty,
+.cd-form #address.ng-invalid.ng-dirty,
+.cd-form #email.ng-invalid.ng-dirty,
+.cd-form #password.ng-invalid.ng-dirty,
+.cd-form #pw2.ng-invalid.ng-dirty,
+.cd-form #username.ng-invalid.ng-dirty,
+.cd-form #signinPassword.ng-invalid.ng-dirty,
+.cd-form #resetEmail.ng-invalid.ng-dirty,
+.cd-form #inviteUser.ng-invalid.ng-dirty,
+.cd-form #oldPassword.ng-invalid.ng-dirty,
+.cd-form #newPassword.ng-invalid.ng-dirty,
+.cd-form #orgid.ng-invalid.ng-dirty,
+.cd-form #ccname.ng-invalid.ng-dirty,
+.cd-form #ccnum.ng-invalid.ng-dirty,
+.cd-form #ccdate.ng-invalid.ng-dirty,
+.cd-form #cccvv.ng-invalid.ng-dirty,
+.cd-form #cczip.ng-invalid.ng-dirty,{
+    border-color: #FA787E;
+    -webkit-box-shadow: inset 0 1px 1px #FA787E;
+    box-shadow: inset 0 1px 1px #FA787E;
+}
+
+.cd-switcher {
+    padding: 0;
+}
+
+#terms h3 {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cd-top.cd-is-visible,
+.cd-top.cd-fade-out,
+.no-touch .cd-top:hover {
+    -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+    -moz-transition: opacity .3s 0s, visibility 0s 0s;
+    transition: opacity .3s 0s, visibility 0s 0s;
+}
+
+.cd-top.cd-is-visible {
+    /* the button becomes visible */
+    visibility: visible;
+    opacity: 1;
+}
+
+.cd-top.cd-fade-out {
+    /* if the user keeps scrolling down, the button is out of focus and becomes less visible */
+    opacity: .5;
+}
+
+.no-touch .cd-top:hover {
+    background-color: #e86256;
+    opacity: 1;
+}
+
+.cd-form input#email {
+    text-transform: lowercase;
+}
+#termsCond, #terms{
+    padding-top:0px;
+}
+#terms .fa-times-circle-o:before {
+    font-size: 2.6rem;
+    cursor: pointer;
+}
+.modal-content{
+    height:500px;
+    overflow: auto;
+}
+#terms-header{
+    height: 80px;
+    position: fixed;
+    float: left;
+    display: block;
+    overflow: hidden;
+    width: 90%;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    z-index:999;
+}
+#terms-header .cross{
+    padding-top: 1.4em;
+}
+#terms-header .headText{
+    clear: both;
+    float: none;
+}
+#terms-body{
+    margin-top: 95px;
+    float: left;
+}
+/*Payment*/
+.payment input.has-padding{
+    padding:12px 20px 12px 12px !important;
+}
+.icons-cc{
+    background: url("../img/icons-cc.png") no-repeat center center;
+    width: 201px;
+    height: 32px;
+    display:block;
+}
+/* Media Queiries*/
+
+@media only screen and (min-width: 600px) {
+    .cd-form-message {
+        padding: 2em 2em 0;
+    }
+}
+
+@media only screen and (min-width: 1170px) {
+    .cd-close-form {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    header[role=banner] {
+        height: 80px;
+    }
+    header[role=banner] #cd-logo {
+        margin: 25px 0 0 5%;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .main-nav {
+        width: auto;
+        height: auto;
+        background: none;
+        cursor: auto;
+    }
+    .main-nav ul {
+        position: static;
+        width: auto;
+        -webkit-padding-start: 0;
+        -webkit-margin-before: 0;
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+        transform: translateY(0);
+        line-height: 80px;
+    }
+    .main-nav ul.is-visible {
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+        transform: translateY(0);
+    }
+    .main-nav li {
+        display: inline-block;
+        margin-left: 1em;
+    }
+    .main-nav li:nth-last-child(2) {
+        margin-left: 2em;
+    }
+    .main-nav a {
+        display: inline-block;
+        height: auto;
+        line-height: normal;
+        background: transparent;
+    }
+    .main-nav a.cd-signin,
+    .main-nav a.cd-signup {
+        padding: .6em 1em;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50em;
+    }
+    .main-nav a.cd-signup {
+        /*background: #2f889a;*/
+        background: #4EA699;
+        border: none;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .cd-user-modal-container {
+        margin: 4em auto;
+    }
+    .cd-user-modal-container .cd-switcher a {
+        height: 70px;
+        line-height: 70px;
+    }
+}

@@ -1,0 +1,124 @@
+
+
+	<!-- <dropdowndatetimepicker data-ng-model="data1.date" -->
+<!-- 		data-before-render="wc.beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" -->
+<!-- 		data-datetimepicker-config="{minView: 'day', dropdownSelector: '#dropdown1 .dropdown-toggle'}" -->
+<!-- 		data-dropdown-config="{title: 'Testing 123', identifier: 'dropdown1'}"></dropdowndatetimepicker> -->
+
+<!-- <div ng-controller="WeatherGraphController">
+<ui-view></ui-view>
+<link rel="stylesheet" href="static/css/dc.css">
+	<div gridster="gridsterOptions">
+		<ul class="with-3d-shadow with-transitions" style="-webkit-user-select: none;">
+			<li gridster-item="widget" ng-repeat="widget in dashboard.widgets">
+				<div class="box">
+					<div class="box-header">
+						<span>{{ widget.name }}</span>
+					</div>
+					<div class="box-content">
+						<nvd3 options="widget.chart.options" data="widget.chart.data"
+							api="widget.chart.api" config="config" events="events"></nvd3>
+					</div>
+				</div>
+			</li>
+			<li gridster-item="widget0" ng-init="widget0={
+					col     : 0,
+					width   : 'auto',
+					colWidth: 'auto',
+					sizeX   : 2,
+					sizeY   : 2
+				}">
+				<div class="box">
+					<div class="box-header">
+						<span>Locations</span>
+					</div>
+					<div class="box-content">
+						<div id="location-chart" style="height:100%;width:100%;">
+          				</div>
+					</div>
+				</div>
+			</li>
+			<li gridster-item="widget2" ng-init="widget2={
+					col     : 3,
+					row     : 0,
+					width   : 'auto',
+					colWidth: 'auto',
+					minSizeX: 3,
+					sizeX   : 4,
+					sizeY   : 1
+				}">
+				<div class="box">
+					<div class="box-header">
+						<span>GDD Tracker</span>
+					</div>
+					<div class="box-content" id="gddTracker">
+						<div id="monthly-move-chart" style="height:80%;width:100%;">
+							<a class='reset' href='javascript:myChart.filterAll();dc.redrawAll();' style='visibility: hidden;'>reset</a>
+          				</div>
+						<div id="monthly-volume-chart" style="height:15%;width:100%;"></div>
+					</div>
+				</div>
+			</li>
+			<li gridster-item="widget3" ng-init="widget3={col:4,row:1,width: 'auto',colWidth: 'auto',sizeX:2, sizeY:1}">
+				<div class="box">
+					<div class="box-header">
+						<span>Temperature Variability</span>
+					</div>
+					<div class="box-content">
+						<div id="fluctuation-chart" style="height:100%;width:100%;">
+          				</div>
+					</div>
+				</div>
+			</li>
+			<li gridster-item="widget50" ng-init="widget50={col:0,row:1,width: 'auto',colWidth: 'auto', sizeX:2, sizeY:1}">
+				<div class="box" ng-controller="WeatherController as wc">
+					<div class="box-header">
+						<span>Weather for {{ location.name }}</span>
+					</div>
+					<div id="iframePlaceHolder">
+						<forecast-widget></forecast-widget>
+					</pre>
+				</div>
+			</li>
+			
+		</ul>
+	</div>
+</div> -->
+
+
+<div class="weather-main">
+	<div id="section1" class="white">
+		<h4>Warnings</h4>
+		<div class="col-sm-12">
+			<div class="col-sm-4 bor-grey">&nbsp;</div>
+			<div class="col-sm-3 bor-grey">
+				<i class="fa fa-bolt pull-left bolt" aria-hidden="true"></i>
+				<p>Lightning advisory<br>12.8 miles away<br>at 10:54PM<p>
+			</div>
+			<div class="col-sm-3 bor-grey">
+			<i class="fa fa-exclamation-circle pull-left warning" aria-hidden="true"></i>
+				<p>Freeze warning<br>from 11:45PM<br> to 4:30AM</p>
+			</div>
+		</div>
+	</div>
+	<div id="section2" class="white">
+		<h4>Wednesday</h4>
+	</div>
+	<div id="section3" class="white">
+		<h4>Stats</h4>
+		<div class="col-sm-12">
+			<div class="col-sm-3">
+				<p class="pull-right ">Month to date<br>Year to date</p>
+			</div>
+			<div class="col-sm-3">
+				<p class="center">Rainfall<br>0.7"<br>1.3"<br><br>12%<br>wetter than<br> last year</p>
+			</div>
+			<div class="col-sm-3">
+			<p class="center">GDD<br>18<br>50<br><br>8%<br>more than<br> last year</p>
+			</div>
+			<div class="col-sm-3">
+				<button class="add-stats">add stats to track</button>
+			</div>
+		</div>
+	</div>
+</div>

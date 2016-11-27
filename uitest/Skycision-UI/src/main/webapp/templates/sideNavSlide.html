@@ -1,0 +1,9 @@
+<div class="sideNavBarSlide pull-left" ng-class="{true: 'col-sm-3'}[openNav]">
+
+    <i class="slideNavArrow fa" 
+        ng-class="{true: 'fa-angle-double-left', false: 'fa-angle-double-right'}[openNav]"
+        aria-hidden="true" 
+        ng-click="toggleSlideNavBar()"></i>
+    <div class="slideNavBg"></div>
+    <div class="navBarContent animate-show" ng-show="openNav" ng-transclude></div>
+</div>

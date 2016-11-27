@@ -1,0 +1,249 @@
+body {
+    overflow: auto;
+}
+
+header[role=banner] {
+    z-index: 1;
+    top:0;
+}
+
+.join-main {
+    margin-bottom: 70px;
+    margin-top:80px;
+}
+
+.txt-center {
+    text-align: center;
+}
+
+#ob,
+#obs {
+    overflow: auto;
+    font-size: 1.2rem;
+}
+
+#ob .txt-center {
+    margin-top: 120px;
+    margin-bottom: 20px;
+}
+
+#obs .txt-center {
+    margin-top: 120px;
+}
+
+.join-main ul {
+    width: 100%;
+    text-align: center;
+    display: table;
+}
+
+.join-main ul li.offers {
+    width: 20%;
+    margin: 0 3% 3% 3%;
+    border: 1px solid #ccc;
+    display: inline-block;
+    border-radius: .50em;
+}
+
+.join-main .offer-head {
+    padding: 1em;
+    background: #3399cc;
+    border-radius: .25em .25em 0;
+    color: #fff;
+}
+
+.join-main .offer-head .price {
+    display: block;
+    font-weight: bold;
+}
+
+.join-main .offer-head span {
+    font-size: 2.6rem;
+}
+
+.join-main .offer-body {
+    padding: 2.8em 1em 2.5em;
+}
+
+.join-main .offer-body ul li {
+    line-height: 1.5;
+    margin-bottom: .4em;
+}
+
+.join-main .offer-body ul li em {
+    position: relative;
+    padding-left: 10px;
+}
+
+.join-main footer {
+    padding-bottom: 1.7em;
+}
+
+.join-main footer a {
+    border: 1px solid rgba(223, 79, 113, 0.4);
+    color: #df4f71;
+    padding: 1em 1.8em;
+    border-radius: 50em;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+#ob .footer,
+#obs .footer {
+    background: #ececec;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#ob .footer p,
+#obs .footer p {
+    padding: 25px 0 15px 10px;
+    text-align: center;
+    color: #000;
+    font-size: 1.2rem;
+}
+
+#ob #cd-signup {
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 0 0.25em 0.25em 0.25em;
+}
+
+#ob #signup .inline {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#obSignup-view .chicklets {
+    padding-right: 20px;
+    text-align: justify;
+}
+
+#obSignup-view {
+    margin-bottom: 80px;
+}
+
+.btn-main {
+    padding-top: 25px;
+    color: #fff;
+}
+
+.btn-main h4 {
+    padding-right: 10px;
+}
+
+.btn-main a {
+    background: #cc6700;
+    padding: 10px;
+    height: 30px;
+    outline: none;
+    vertical-align: middle;
+    color: #fff;
+    border: 0;
+    border-radius: 0.25em;
+    text-align: center;
+    line-height: 12px;
+    margin-top: 5px;
+}
+
+.obsu-info {
+    border: 1px solid red;
+    margin: 0 30px 30px 80px;
+}
+
+ul.chicklets li {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+ul.chicklets > li > img {
+    margin-right: 20px;
+    width: 60px;
+    height: 60px;
+}
+
+.divider {
+    float: none;
+    display: block;
+    overflow: hidden;
+    clear: both;
+    border-right: dotted #ccc;
+}
+
+a.ob-signup-learnmore::after {
+    content: "\0203A\0203A" !important;
+    margin-left: 4px;
+}
+
+.ob-index-back button {
+    background: #4EA699;
+    border: none;
+    color: #fff;
+    padding: 5px;
+    width: 50px;
+    border-radius: 0.25em 0.25em 0 0;
+}
+
+.ob-index-back a {
+    margin-left: 16px;
+}
+
+button:focus {
+    outline: none;
+}
+
+
+/*Demo*/
+
+#demo {
+    padding-top: 0px;
+}
+
+#demo .terms-header {
+    height: 0;
+    border-bottom: 0;
+    overflow: visible;
+    margin-top: 20px;
+    position: inherit;
+}
+
+#demo .join-main {
+    margin-bottom: 0;
+    margin-top:20px;
+}
+
+#demo .cross {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#demo #terms-body {
+    margin-top: 20px;
+}
+
+#demo .fa {
+    font-size: 1.6rem;
+}
+.offer-main{
+    display: table;
+}
+.offer-main .btn-main{
+    display: inline-block;
+    margin-right: 3%;
+}
+.btn-main button {
+    background: #cc6700;
+    padding: 10px 50px;
+    height: 30px;
+    outline: none;
+    vertical-align: middle;
+    color: #fff;
+    border: 0;
+    border-radius: 0.25em;
+    text-align: center;
+    line-height: 12px;
+    margin-top: 5px;
+}    

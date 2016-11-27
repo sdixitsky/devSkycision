@@ -1,0 +1,266 @@
+<!-- Gem style -->
+<header role="banner">
+    <div id="cd-logo">
+        <a href=""><img src="/static/img/portfolio/skycision-logo-white-188x28.png" alt="Logo" width="188" height="28"></a>
+    </div>
+</header>
+<div class="cd-user-modal is-visible" ng-cloak>
+    <!-- this is the entire modal form, including the background -->
+    <div class="cd-user-modal-container">
+        <!-- this is the container wrapper -->
+        <ul class="cd-switcher">
+            <li><a href="" ng-click="sc.setMode(0)" class="selected">Sign
+                    in</a></li>
+            <li><a href="" ng-click="sc.setMode(1)">New account</a></li>
+        </ul>
+        <div id="cd-login" class="is-selected" ng-init="user={username:null,email:null,password:null,address:null}">
+            <!-- log in form -->
+            <form role="form" name="formlogin" class="cd-form">
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="username">Username</label>
+                        <input class="full-width has-padding has-border" id="username" name="username" type="text" placeholder="Username or E-mail" ng-minlength="6" required ng-model="user.username">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="formlogin.username.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 6 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="signinPassword">Password</label>
+                        <input class="full-width has-padding has-border" id="signinPassword" name="signinPassword" type="password" placeholder="Password" required ng-model="user.password"> <a href="" class="hide-password" ng-click="sc.togglePasswordShow($event)">Show</a>
+                    </div>
+                </div>
+                <div class="fieldset row">
+                    <div class="col-sm-4 row">
+                        <input type="checkbox" id="remember-me" checked ng-model="user.rememberMe">
+                        <label for="remember-me" class="terms">Remember me</label>
+                    </div>
+                    <div class="col-sm-5 row">
+                        <div class="cd-form-bottom-message">
+                            <a href="" ng-click="sc.setMode(2)"><strong>Forgot your password?</strong></a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button data-ng-hide="loading" class="full-width" type="submit" value="Login" ng-click="sc.signIn(user)">
+                        <span>Login</span>
+                    </button>
+                    <button data-ng-show="loading" class="full-width" type="submit">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </button>
+                </div>
+            </form>
+            <!-- <a href="" class="cd-close-form">Close</a> -->
+        </div>
+        <!-- cd-login -->
+        <div id="cd-signup" ng-init="account={username:null,email:'',password:null,address:null}">
+            <!-- sign up form -->
+            <form role="form" name="form" class="cd-form" ng-model="account">
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="givenName">First Name</label>
+                        <input class="full-width has-padding has-border" id="givenName" name="givenName" type="text" placeholder="First name" ng-minlength="3" required ng-model="account.given_name">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.givenName.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 3 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="familyName">Last Name
+                        </label>
+                        <input class="full-width has-padding has-border" id="familyName" name="familyName" type="text" placeholder="Last name" ng-minlength="3" required ng-model="account.familyName">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.familyName.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 3 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="userName">Username</label>
+                        <input class="full-width has-padding has-border" id="userName" name="userName" type="text" placeholder="Username" ng-minlength="6" required ng-model="account.username">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.userName.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 6 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="address">Address</label>
+                        <input class="full-width has-padding has-border" id="address" name="address" type="text" placeholder="Address (optional)" ng-model="account.address" ng-autocomplete>
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.address.$error.address">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter valid address</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-email" for="email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="email" name="email" type="email" required placeholder="E-mail" ng-model="account.email">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.email.$error.email">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter valid email</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="password">Password</label>
+                        <input class="full-width has-padding has-border" id="password" name="password" type="password" required placeholder="Password" ng-minlength="8" ng-model="account.password"> <a href="" ng-click="sc.togglePasswordShow($event)" class="hide-password">Show</a>
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.password.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Password must have at least 8 characters</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="pw2">Confirm Password</label>
+                        <input class="full-width has-padding has-border" id="pw2" name="pw2" type="password" required placeholder="Confirm Password" ng-model="account.pw2" confirm-password="account.password"> <a href="" ng-click="sc.togglePasswordShow($event)" class="hide-password">Show</a>
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" 
+                         ng-if="form.pw2.$dirty && form.pw2.$error.confirmPassword">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Your passwords did not match</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <input type="checkbox" name="signupterms" id="signupterms" required ng-model="signupterms">
+                        <label for="signupterms" class="terms">I agree to the <a href="" reuse-modal instance-template="signup-terms.partial.html" use-ctrl="termsController">Terms &amp; Conditions</a>
+                        </label>
+                    </div>
+                    <!-- <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.signupterms.$dirty && form.signupterms.$error.required">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please check terms and conditions</span>
+                    </div> -->
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <!-- <input class="full-width has-padding" id="checkTerms" type="submit" value="Create account" ng-click="sc.validateForm(account)"> -->
+                        <button data-ng-hide="loading" class="full-width has-padding" type="submit" value="Create account" ng-click="sc.validateForm(account)">
+                            <span>Create account</span>
+                        </button>
+                        <button data-ng-show="loading" class="full-width has-padding" type="submit">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <p class="cd-form-bottom-message">
+                <a href="" ng-click="sc.setMode(0)"><strong>Back to log-in</strong></a>
+            </p>
+        </div>
+        <!-- cd-signup -->
+        <div id="cd-reset-password">
+            <!-- reset password form -->
+            <p class="cd-form-message"><strong>Lost your password?</strong>
+                <br/>
+                <br/> Enter your email address and we'll send you a code to create a new one.
+            </p>
+            <form class="cd-form" name="resetform" role="form">
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-email" for="resetEmail">E-mail</label>
+                        <input class="full-width has-padding has-border" id="resetEmail" name="resetEmail" type="email" required placeholder="E-mail" ng-model="reset.email">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="resetform.resetEmail.$error.email">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter valid email</span>
+                    </div>
+                </div>
+                <p class="fieldset">
+                    <input class="full-width has-padding" type="submit" value="Reset password" ng-click="sc.resetPassword(reset.email)">
+                </p>
+            </form>
+            <p class="cd-form-bottom-message">
+                <a href="" ng-click="sc.setMode(0)"><strong>Back to log-in</strong></a>
+            </p>
+        </div>
+        <div id="cd-confirm-reset">
+            <!-- verify password form -->
+            <p class="cd-form-message">Enter your reset code</p>
+            <form class="cd-form" name="confirmreset" role="form">
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="verifyCode">Verification code</label>
+                        <input class="full-width has-padding has-border" id="verifyCode" name="verifyCode" ng-model="confirmreset.code" required type="text" placeholder="Verification Code">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="confirmreset.verifyCode.$error.verifyCode">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter valid code</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="newPassword">New Password</label>
+                        <input class="full-width has-padding has-border" id="newPassword" name="newPassword" type="password" required placeholder="New Password" ng-minlength="8" ng-model="confirmreset.password"> <a href="" class="hide-password" ng-click="sc.togglePasswordShow($event)">Show</a>
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="confirmreset.newPassword.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Password must have at least 8 characters</span>
+                    </div>
+                </div>
+                <p class="fieldset">
+                    <input class="full-width has-padding" type="submit" value="Verify" ng-click="sc.confirmResetPassword(confirmreset)">
+                </p>
+            </form>
+            <p class="cd-form-bottom-message">
+                <a href="" ng-click="sc.setMode(0)">Return to login</a>
+            </p>
+        </div>
+        <!-- cd-reset-password -->
+        <!-- Verify Email -->
+        <div id="cd-verify">
+            <!-- verify password form -->
+            <p class="cd-form-message">Verify your email address</p>
+            <form class="cd-form" name="verifyEmail">
+                <div class="fieldset">
+                        <div class="fieldContainer">
+                        <label class="image-replace cd-email" for="emailverify">Verification code</label>
+                        <input class="full-width has-padding has-border" name="emailverify" ng-model="verifyCode" id="emailverify" type="text" placeholder="Verification Code">
+                    </div>
+                </div>
+                <p class="fieldset">
+                    <input class="full-width has-padding" type="submit" value="Verify" ng-click="sc.verifyEmail(verifyCode)">
+                </p>
+            </form>
+            <p class="cd-form-bottom-message">
+                <a href="" ng-click="sc.setMode(0)">Return to login</a>
+            </p>
+        </div>
+        <!-- cd-verify-email -->
+    </div>
+    <!-- cd-user-modal-container -->
+</div>
+<!-- cd-user-modal -->

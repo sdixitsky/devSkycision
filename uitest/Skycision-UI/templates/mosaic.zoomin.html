@@ -1,0 +1,54 @@
+<div ng-cloak class="modal fade fast" id="dialog" tabindex='-1' data-keyboard="true" ng-if="user">
+	<div ng-cloak class="modal-dialog" id="zoom-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="border: 0px;">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					<span aria-hidden="true">&times;</span>
+				</button>
+					<h4 class="modal-title" id="modalViewTitle">Detail View</h4>
+			</div>
+			<!-- /.modal-header -->
+			<div class="modal-body">
+				<div class="container-fluid" id="zoom-container">
+					<div class="col-xs-4"style="padding-left: 0px; padding-right: 2rem;">
+						<div id="zoom-thumb-div" class="row-xs-4">
+							<img class="data-zoom-image" src="" id="zoom-thumb-img">
+						</div>
+						<!-- /.zoom-thumb-div -->
+						<div class="panel panel-default" style="width: 100%;" id="infoPanel">
+							<div class="panel-heading">
+								<h3 class="panel-title">Tile Info</h3>
+							</div>
+							<div class="panel-body">
+								<dl class="dl-horizontal">
+									<dt>Latitude</dt>
+									<dd id="modalLatitude">...</dd>
+									<dt>Longitude</dt>
+									<dd id="modalLongitude">...</dd>
+									<dt>Altitude</dt>
+									<dd id="modalAltitude">...</dd>
+									<dt>Heading</dt>
+									<dd id="modalHeading">...</dd>
+								</dl>
+								<div id="tileMap" ng-show="map">Map here</div>
+							</div>
+						</div>
+						<!-- /.panel panel-default -->
+					</div>
+					<!-- /.col-lg-4 -->
+					<div id="zoom-full-div" class="col-xs-8" style="background: rgba(0, 0, 0, 0.2) url('/static/img/loading.svg') no-repeat center center;">
+						<div style="color: white; text-align: center; font-family: 'Helvetica Neue'; font-size: 20px">
+								Hover over the thumbnail to view full resolution <br /> Use the
+								scrollwheel to zoom <br /> Press ESC to return to the map
+						</div>
+					</div>
+				<!-- /.zoom-full-div -->
+				</div>
+				<!-- /.zoom-container -->
+				</div>
+				<!-- /.modal-body -->
+		</div>
+		<!-- /.modal-content -->
+	</div>
+			<!-- /.modal-dialog -->
+</div>

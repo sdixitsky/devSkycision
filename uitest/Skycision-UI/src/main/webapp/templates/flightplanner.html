@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	
+<!-- <link rel="stylesheet" href="bootstrap-lightbox.css"> -->
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css">
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src='/static/js/jQueryRotate.js'></script>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src="/static/js/moment-with-locales.js"></script>
+<script src="/static/js/collapse.js"></script>
+<script src="/static/js/transition.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.js"></script>
+
+<!-- google map -->
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwJYYU7ozkbUn1KbnkuB_NGO1zETWeovg&signed_in=true"></script>
+<meta charset="utf-8">
+<title>Mosaic</title>
+
+
+<style>
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 20;
+	background-color:steelblue;
+}
+
+#map {
+	height: 100%;
+}
+
+#panel {
+	text-align: center;
+	padding-top: 20px;
+}
+
+
+/* .modal-fullscreen */
+/* .modal-fullscreen {
+	background: transparent;
+} */
+
+/* .modal-fullscreen .modal-content {
+	background: #ffffff;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	height:100%;
+} */
+
+.modal-dialog {
+	background: transparent;
+	width:95%;
+	/* max-width: 1400px; */
+	height:calc(95% - 27px);
+	/* max-height:1050px; */
+	margin: 30px auto;
+}
+
+.modal-content {
+	height:100%;
+	width:100%;
+	padding: 0px;
+	border: 0px;
+	background-color: #9CC3E4;
+}
+.modal-title {
+	color: #12548A;
+}
+.modal-body {
+	overflow: auto !important;
+	height:auto;
+	max-height: calc(100% - 54px);
+	width:auto;
+	max-width: 100%;
+	padding: 0px;
+	border: 0px;
+	text-align: center;
+}
+
+/* .modal-backdrop.modal-backdrop-fullscreen {
+	background: #ffffff;
+}
+
+.modal-backdrop.modal-backdrop-fullscreen.in {
+	opacity: .97;
+	filter: alpha(opacity = 97);
+} */
+
+/* .modal-fullscreen size: we use Bootstrap media query breakpoints */
+/*.modal-fullscreen .modal-dialog{
+	 margin: 0;
+	margin-right: auto;
+	margin-left: auto;
+	
+	width:80%;
+	height:80%;
+	margin: 10% auto;
+}*/
+/*
+@media ( min-width : 768px) {
+	.modal-fullscreen .modal-dialog {
+		width: 750px;
+	}
+}
+
+@media ( min-width : 992px) {
+	.modal-fullscreen .modal-dialog {
+		width: 900px;
+	}
+}
+
+@media ( min-width : 1200px) {
+	.modal-fullscreen .modal-dialog {
+		width: 1170px;
+	}
+}
+
+@media ( min-width : 1600px) {
+	.modal-fullscreen .modal-dialog {
+		width: 1440px;
+	}
+}
+
+@media ( min-width : 1800px) {
+	.modal-fullscreen .modal-dialog {
+		width: 1600px;
+	}
+}*/
+</style>
+
+<script>
+
+
+
+        // Set the custom overlay object's prototype to a new instance
+        // of OverlayView. In effect, this will subclass the overlay class therefore
+        // it's simpler to load the API synchronously, using
+        // google.maps.event.addDomListener().
+        // Note that we set the prototype to an instance, rather than the
+        // parent class itself, because we do not wish to modify the parent class.
+
+       
+        function Coordinate(lat,lng){
+        	this.lat = lat;
+        	this.lng = lng;
+        }
+        
+        
+        var overlays=[];
+        var coordinateList = [];
+        var responseData = [];
+        var lineList = [];
+        
+        MosaicTile = function (tile, map, height, width) {
+            this.ptSw = new google.maps.LatLng(tile.bounds[2],tile.bounds[3]);
+            this.ptNe = new google.maps.LatLng(tile.bounds[0],tile.bounds[1]);
+            this.height_ = height;
+            this.width_ = width;
+            this.tileId_=tile.id;//pass the id so its available on click
+			this.tile_ = tile;
+            
+            var e = document.getElementById('imageType');
+            if(e.options[e.selectedIndex].value == "mrgb"){
+            	this.image_ = tile.mrgb;
+            }else{
+            	this.image_  = tile.mndvi;
+            }
+            
+            // We create the div that will hold this overlay in the
+            // onAdd() method.
+            this.div_ = null;
+            
+            this.setMap (map);
+        }
+        
+        MosaicTile.prototype = new google.maps.OverlayView();
+        
+        // This example adds a red rectangle to a map.
+
+        function ChoiceControl(controlDiv, map){
+        	var controlUI = document.createElement('div');
+        	controlDiv.appendChild(controlUI);
+        	var control = document.createElement('select');
+        	control.setAttribute("name", "function");
+        	control.setAttribute("id", "choices");
+        	control.setAttribute("class", "form-control");
+        	control.onchange = change;
+        	
+        	var defaultEl = document.createElement("option");
+        	defaultEl.textContent = "Select an Action";
+        	control.appendChild(defaultEl);
+        	
+        	var choices = ["Define Your Farm",
+        	               "Add Field",
+        	               "Modify Field",
+        	               "Plan a Flight",
+        	               "View Images"];
+        	for(var i = 0; i < choices.length; i++) {
+                var el = document.createElement("option");
+                el.textContent = choices[i];
+                el.value = i;
+                control.appendChild(el);
+            }
+        	
+        	controlUI.appendChild(control);
+        	
+        } 
+        
+        function change(){
+    		var value = document.getElementById("choices").value;
+    		
+        	if(value == 0){
+        		var myNode = document.getElementById("col1");
+        		while (myNode.firstChild) {
+        		    myNode.removeChild(myNode.firstChild);
+        		}
+        		google.maps.event.addListener(map, 'click',markerListener);
+        		var cf = document.createElement("button");
+        		cf.setAttribute("class", "btn btn-primary");
+        		cf.setAttribute("style", "button");
+        		cf.setAttribute("type", "button");
+        		cf.setAttribute("id","modifyFarm");
+        		cf.onclick = changeFarm;
+        		cf.textContent = "Confirm Farm";
+        		
+        		document.getElementById("col1").appendChild(cf);
+        		
+        		//drawFarm(dataFromServer["boundary"],farmList);
+        	}else if(value == 1){
+        		var myNode = document.getElementById("col1");
+        		while (myNode.firstChild) {
+        		    myNode.removeChild(myNode.firstChild);
+        		}
+        		
+        		google.maps.event.addListener(map, 'click',markerListener);
+        		var af = document.createElement("input");
+        		af.setAttribute("type", "text");
+        		af.setAttribute("name", "fieldName");
+        		af.setAttribute("id", "fieldName");
+        		document.getElementById("col1").appendChild(af);
+        		
+        		var afb = document.createElement("button");
+        		afb.setAttribute("class", "btn btn-primary");
+        		afb.setAttribute("style", "button");
+        		afb.setAttribute("type", "button");
+        		afb.setAttribute("id", "addField");
+        		afb.onclick = addNewField;
+        		afb.textContent = "Add Field";
+        		document.getElementById("col1").appendChild(afb);
+        		
+        	}else if(value == 2){
+        		var myNode = document.getElementById("col1");
+        		while (myNode.firstChild) {
+        		    myNode.removeChild(myNode.firstChild);
+        		}
+        		
+        		google.maps.event.clearListeners(map, 'click');
+        		
+        		var mf = document.createElement("input");
+        		mf.setAttribute("type", "text");
+        		mf.setAttribute("name", "changeName");
+        		mf.setAttribute("id", "changeName");
+        		document.getElementById("col1").appendChild(mf);
+        		
+        		var mfb = document.createElement("button");
+        		mfb.setAttribute("class", "btn btn-primary");
+        		mfb.setAttribute("style", "button");
+        		mfb.setAttribute("type", "button");
+        		mfb.setAttribute("id", "changeNameButton");
+        		mfb.onclick = changeFieldName;
+        		mfb.textContent = "Change Field Name";
+        		document.getElementById("col1").appendChild(mfb);
+        	}else if(value == 3){
+        		var myNode = document.getElementById("col1");
+        		while (myNode.firstChild) {
+        		    myNode.removeChild(myNode.firstChild);
+        		}
+        		google.maps.event.clearListeners(map, 'click');
+        		
+        		var ao = document.createElement("select");
+        		ao.setAttribute("class", "form-control");
+        		ao.setAttribute("id", "altitude1");
+        		var defaultEl = document.createElement("option");
+        		defaultEl.textContent = "Please choose altitude";
+        		ao.appendChild(defaultEl);
+        		var options2 = [33, 100];
+            	for(var i = 0; i < options2.length; i++) {
+                    var el = document.createElement("option");
+                    el.textContent = options2[i];
+                    el.value = options2[i];
+                    ao.appendChild(el);
+                }
+            	document.getElementById("col1").appendChild(ao);
+            	
+            	var gb = document.createElement("button");
+            	gb.setAttribute("class", "btn btn-primary");
+        		gb.setAttribute("style", "button");
+        		gb.setAttribute("type", "button");
+        		gb.setAttribute("id", "send");
+        		gb.onclick = sendData;
+        		gb.textContent = "Generate Flight Plan";
+        		document.getElementById("col1").appendChild(gb);
+        		
+        		showFlightPlan();
+        		
+        	}else if(value == 4){
+        		var myNode = document.getElementById("col1");
+        		while (myNode.firstChild) {
+        		    myNode.removeChild(myNode.firstChild);
+        		}
+        		google.maps.event.clearListeners(map, 'click');
+        		var select = document.createElement('select'); 
+        		select.setAttribute("name", "farm");
+        		select.setAttribute("class", "form-control");
+        		select.setAttribute("id", "field2");
+        		var de = document.createElement('option');
+        		de.textContent = "Please select Field";
+        		select.appendChild(de);
+                var options = dataFromServer["fields"]; 
+                
+                while(select.children.length > 1){
+                	select.remove(select.children.length - 1);
+                }
+                for(var i = 0; i < options.length; i++) {
+                    var opt = options[i]["fieldName"];
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = i;
+                    select.appendChild(el);
+                }
+                document.getElementById("col1").appendChild(select);
+                
+                var ao = document.createElement("select");
+                ao.setAttribute("class", "form-control");
+        		ao.setAttribute("id", "altitude2");
+        		var defaultEl = document.createElement("option");
+        		defaultEl.textContent = "Please choose altitude";
+        		ao.appendChild(defaultEl);
+        		var options = [33, 100];
+            	for(var i = 0; i < options.length; i++) {
+                    var el = document.createElement("option");
+                    el.textContent = options[i];
+                    el.value = options[i];
+                    ao.appendChild(el);
+                }
+            	document.getElementById("col1").appendChild(ao);
+            	
+            	var div  = document.createElement('div');
+            	div.setAttribute("class", "form-group");
+            	
+            	var dateDiv = document.createElement('div');
+            	dateDiv.setAttribute("class","input-group date");
+            	dateDiv.setAttribute("id", "farmdate");
+            	div.appendChild(dateDiv);
+            	
+            	var dateInput = document.createElement('input');
+            	dateInput.setAttribute("type","text");
+            	dateInput.setAttribute("class", "form-control");
+            	dateInput.setAttribute("date-date-formate" ,"MM/DD/YYYY");
+            	dateInput.setAttribute("id", "dateinput");
+            	$(dateInput).datetimepicker();
+            	dateDiv.appendChild(dateInput);
+            	
+            	var dateSpan = document.createElement('span');
+            	dateSpan.setAttribute("class", "input-group-addon");
+            	dateDiv.appendChild(dateSpan);
+            	
+            	var calendar = document.createElement('span');
+            	calendar.setAttribute("class","glyphicon glyphicon-calendar");
+            	dateSpan.appendChild(calendar);
+            	
+            	document.getElementById("col1").appendChild(div);
+            	
+            	var imageOptions = document.createElement('select');
+            	imageOptions.setAttribute("class", "form-control");
+            	imageOptions.setAttribute("id", "imageType");
+            	var rgb = document.createElement('option');
+            	rgb.textContent = "RGB";
+            	rgb.value = "mrgb";
+            	imageOptions.appendChild(rgb);
+            	var ndvi = document.createElement('option');
+            	ndvi.textContent = "NDVI";
+            	ndvi.value = "mndvi";
+            	imageOptions.appendChild(ndvi);
+            	document.getElementById("col1").appendChild(imageOptions);
+            	
+            	var load = document.createElement('input');
+            	load.setAttribute("class", "btn btn-primary");
+            	load.setAttribute("id", "loadBtn");
+            	load.setAttribute("value" ,"Load");
+            	document.getElementById("col1").appendChild(load);
+        	}
+    	};
+        function initMap() {
+        	polygonClicked = -1;
+        	changeFarmList = [];
+        	changeFarmData = {};
+            var mosaic={};
+            coords = [];
+            plotsList = [];
+            markerList = [];
+            farmList = [];
+            fieldBoundaryList = [];
+            fieldList = [];
+            var button = document.getElementById('send');
+            //button.disabled = 'disabled';
+            /**
+            document.getElementById('modifyFarm').disabled = 'disabled';
+            document.getElementById('addField').disabled = 'disabled';
+            **/
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center:{lat:40.080500, lng:-79.136708},
+				// center: {lat: 40.027678, lng: -79.202843}, //40.080500,-79.136708
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            });
+            
+            
+            var controlDiv = document.createElement('div');
+            var choiceControl = new ChoiceControl(controlDiv, map);
+            controlDiv.index = 1;
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
+            
+            //getFieldCoord(2);
+            var ImageFlipEvent = new CustomEvent("imageChange", {
+                detail: {
+                    data:"Arbitrary:-)"
+                },
+                bubbles: true,
+                cancelable: false
+            });
+            
+            /* var image_ = '/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mRGB.jpg';
+            //image2 = image_.rotate(90);
+            var marker = new google.maps.Marker({
+			    position: map.getCenter(),
+			    icon: image_,
+			    map: map,
+  			});
+            $(marker.icon).rotate(90); */
+            
+            dataFromServer= {};
+            updateDataFromServer();
+            
+            console.log(dataFromServer["boundary"]);
+            /* drawFarm(dataFromServer["boundary"],farmList);
+            drawFields(); */
+            
+            var g=function overlayClicked(e){
+              // console.log(e)
+               var showimgtype = $("#imageType").val();
+               showimgtype = showimgtype.substring(1,showimgtype.length);
+               
+               $("#dialog .modal-body").html("<img src='"+mosaic[e.tileId_]['tile'][showimgtype]+"'>");
+                // $("#dialog .modal-body").css("background","no-repeat").css("background-image","url("+ dataFromServer[0]["fullsize"]+")");
+                
+                
+                /* $('#dialog').on('show.bs.modal', function () {
+					$('.modal-content').css('height',$( window ).height()*0.8);
+				}); */ 
+				$('#dialog').modal({keyboard: true}) 
+                $('#dialog').modal('show');
+            }
+            var gg=function selectImageTypeSwitched(e){
+                var select=e.currentTarget;
+                select.dispatchEvent(ImageFlipEvent);
+            };
+           // window.addEventListener('imageChange',function(e){console.log(e)})
+            $('#imageType').change(gg);
+          
+            $('body').on('click', '#loadBtn', function (event) {
+                event.preventDefault();
+                var e = document.getElementById("field2");
+                var fieldChosen = e.options[e.selectedIndex].value;
+              //format date
+              /**
+                var dateChosen = $('#farmdate').data("DateTimePicker").date();
+                var date = dateChosen._d;
+                console.log("dateChosen: ");
+                console.log(dateChosen._d);
+                **/
+                var date = "11/01/2015";
+                //altitude
+                var element = document.getElementById("altitude2");
+                var altitude = element.options[element.selectedIndex].value;
+                var field = {};
+                if(dataFromServer !== null){
+                	console.log("hhhhhhhh");
+                	var fields = dataFromServer["fields"];
+                	field = fields[parseInt(fieldChosen)];
+                }
+                
+                //dataFromServer = {"id":0, "field":"farm1", "dates":"10/15/2015", "tiles":[ { "id":1, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_mNDVI.jpg", "bounds":[40.08049608291296,-79.13919879969392,40.08117057411737,-79.13802342612787], "pixelBounds":[656,525,394,875]}, {"id":2, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_mNDVI.jpg", "bounds":[40.08049608291296,-79.13802342969393,40.08117057411737,-79.13684805612787], "pixelBounds":[656,525,394,875]}, {"id":3, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_mNDVI.jpg", "bounds":[40.08049608291296,-79.13684804969392,40.08117057411737,-79.13567267612788], "pixelBounds":[656,525,394,875]}, {"id":4, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_mNDVI.jpg", "bounds":[40.07982159291301,-79.13919879387213,40.08049608411743,-79.13802343194946], "pixelBounds":[656,525,394,875]}, {"id":5, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_mNDVI.jpg", "bounds":[40.07982159291301,-79.13802342387214,40.08049608411743,-79.13684806194946], "pixelBounds":[656,525,394,875]}, {"id":6, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_mNDVI.jpg", "bounds":[40.07982159291301,-79.13684804387213,40.08049608411743,-79.13567268194946], "pixelBounds":[656,525,394,875]}, {"id":7, "rgb":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mNDVI.jpg", "bounds":[40.07786087724107,-79.1475263744693,40.07804900216136,-79.14699912480239], "pixelBounds":[2273,1227,727,2773]}, {"id":8, "rgb":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_mNDVI.jpg", "bounds":[40.07802440724107,-79.14780273510239,40.07821253216135,-79.14727548416928], "pixelBounds":[2276,1224,724,2776]}, {"id":9, "rgb":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_mNDVI.jpg", "bounds":[40.07832271724107,-79.1483018762573,40.07851084216135,-79.14777462301436], "pixelBounds":[2285,1215,715,2785]}, {"id":10, "rgb":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_mNDVI.jpg", "bounds":[40.078520407241065,-79.14854304702267,40.07870853216135,-79.14801579224897], "pixelBounds":[2188,1312,812,2688]}, {"id":11, "rgb":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_mNDVI.jpg", "bounds":[40.07886279724106,-79.1481900683483,40.07905092216135,-79.14766281092338], "pixelBounds":[2182,1318,818,2682]}, {"id":12, "rgb":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_mNDVI.jpg", "bounds":[40.07861699724107,-79.14786009739662,40.07880512216136,-79.14733284187501], "pixelBounds":[2178,1322,822,2678]}]};
+                 
+                /**
+                for(var i=0;i<dataFromServer["tiles"].length;i++){
+                    var id=dataFromServer["tiles"][i].id;
+                    mosaic[id]={'overlay':new MosaicTile(dataFromServer["tiles"][i],map)};
+                    mosaic[id]['overlay'].addListener('click',g)
+                    mosaic[id]['tile']=dataFromServer['tiles'][i];
+                }
+                **/
+                dates = {};
+                var flightPlan = field["flightPlan"];
+                console.log(flightPlan);
+                for(var i = 0; i < flightPlan.length; i++){
+                	if(flightPlan[i]["altitude"] == altitude ){
+                		dates =  flightPlan[i]["dates"];
+                	}else{
+                		dates = flightPlan[i]["dates"];
+                	}
+                }
+                
+                var tiles = {};
+                /* if(dates !== null){
+                	for(var i = 0; i < dates.length;i++){
+                		if(dates[i]["date"] === String(date)){
+                			tiles = dates[i]["tiles"];
+                			break;
+                		}else{
+                			tiles = dates[i]["tiles"];
+                		}
+                	}
+                } */
+                
+                //tiles = [ { "id":1, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_mNDVI.jpg", "bounds":[40.08049608291296,-79.13919879969392,40.08117057411737,-79.13802342612787], "pixelBounds":[656,525,394,875]}, {"id":2, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_mNDVI.jpg", "bounds":[40.08049608291296,-79.13802342969393,40.08117057411737,-79.13684805612787], "pixelBounds":[656,525,394,875]}, {"id":3, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_mNDVI.jpg", "bounds":[40.08049608291296,-79.13684804969392,40.08117057411737,-79.13567267612788], "pixelBounds":[656,525,394,875]}, {"id":4, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_mNDVI.jpg", "bounds":[40.07982159291301,-79.13919879387213,40.08049608411743,-79.13802343194946], "pixelBounds":[656,525,394,875]}, {"id":5, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_mNDVI.jpg", "bounds":[40.07982159291301,-79.13802342387214,40.08049608411743,-79.13684806194946], "pixelBounds":[656,525,394,875]}, {"id":6, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_mNDVI.jpg", "bounds":[40.07982159291301,-79.13684804387213,40.08049608411743,-79.13567268194946], "pixelBounds":[656,525,394,875]}, {"id":7, "rgb":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mNDVI.jpg", "bounds":[40.07786087724107,-79.1475263744693,40.07804900216136,-79.14699912480239], "pixelBounds":[2273,1227,727,2773]}, {"id":8, "rgb":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_mNDVI.jpg", "bounds":[40.07802440724107,-79.14780273510239,40.07821253216135,-79.14727548416928], "pixelBounds":[2276,1224,724,2776]}, {"id":9, "rgb":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_mNDVI.jpg", "bounds":[40.07832271724107,-79.1483018762573,40.07851084216135,-79.14777462301436], "pixelBounds":[2285,1215,715,2785]}, {"id":10, "rgb":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_mNDVI.jpg", "bounds":[40.078520407241065,-79.14854304702267,40.07870853216135,-79.14801579224897], "pixelBounds":[2188,1312,812,2688]}, {"id":11, "rgb":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_mNDVI.jpg", "bounds":[40.07886279724106,-79.1481900683483,40.07905092216135,-79.14766281092338], "pixelBounds":[2182,1318,818,2682]}, {"id":12, "rgb":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_mNDVI.jpg", "bounds":[40.07861699724107,-79.14786009739662,40.07880512216136,-79.14733284187501], "pixelBounds":[2178,1322,822,2678]}];
+                tiles = [ { "id":1, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13861111/40.08083333_-79.13861111_mNDVI.jpg", "bounds":[40.08128298996773,-79.13817034200181,40.080383668361826,-79.13905187217638], "pixelBounds":[656,525,394,875]}, {"id":2, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13743574/40.08083333_-79.13743574_mNDVI.jpg", "bounds":[40.08128298996773,-79.13699497200182,40.080383668361826,-79.13787650217638], "pixelBounds":[656,525,394,875]}, {"id":3, "rgb":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08083333_-79.13626036/40.08083333_-79.13626036_mNDVI.jpg", "bounds":[40.08128298996773,-79.13581959200182,40.080383668361826,-79.13670112217638], "pixelBounds":[656,525,394,875]}, {"id":4, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13861111/40.08015884_-79.13861111_mNDVI.jpg", "bounds":[40.08060849996777,-79.13817034636818,40.07970917836186,-79.13905186781021], "pixelBounds":[656,525,394,875]}, {"id":5, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13743574/40.08015884_-79.13743574_mNDVI.jpg", "bounds":[40.08060849996777,-79.13699497636819,40.07970917836186,-79.13787649781021], "pixelBounds":[656,525,394,875]}, {"id":6, "rgb":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.08015884_-79.13626036/40.08015884_-79.13626036_mNDVI.jpg", "bounds":[40.08060849996777,-79.13581959636818,40.07970917836186,-79.1367011178102], "pixelBounds":[656,525,394,875]}, {"id":7, "rgb":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07795494_-79.14726275/40.07795494_-79.14726275_mNDVI.jpg", "bounds":[40.078156657531764,-79.14738568064288,40.077753222338295,-79.14713982008544], "pixelBounds":[2273,1227,727,2773]}, {"id":8, "rgb":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07811847_-79.14753911/40.07811847_-79.14753911_mNDVI.jpg", "bounds":[40.07832018753176,-79.14766204093809,40.0779167523383,-79.14741617979021], "pixelBounds":[2276,1224,724,2776]}, {"id":9, "rgb":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07841678_-79.14803825/40.07841678_-79.14803825_mNDVI.jpg", "bounds":[40.07861849753176,-79.14816118147665,40.07821506233829,-79.14791531925168], "pixelBounds":[2285,1215,715,2785]}, {"id":10, "rgb":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07861447_-79.14827942/40.07861447_-79.14827942_mNDVI.jpg", "bounds":[40.07881618753176,-79.14840235183357,40.078412752338295,-79.14815648889478], "pixelBounds":[2188,1312,812,2688]}, {"id":11, "rgb":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07895686_-79.14792644/40.07895686_-79.14792644_mNDVI.jpg", "bounds":[40.079158577531764,-79.14804937245172,40.07875514233829,-79.14780350827667], "pixelBounds":[2182,1318,818,2682]}, {"id":12, "rgb":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_RGB.jpg", "ndvi":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_NDVI.jpg", "mrgb":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_mRGB.jpg", "mndvi":"/static/farm1/10_15_2015/40.07871106_-79.14759647/40.07871106_-79.14759647_mNDVI.jpg", "bounds":[40.07891277753176,-79.14771940200794,40.07850934233831,-79.1474735387204], "pixelBounds":[2178,1322,822,2678]}];
+                
+                if(tiles !== null){
+                	for(var i = 0; i < tiles.length;i++){
+                		var id = tiles[i].id;
+                		//remove previous overlay
+                		if(mosaic !== undefined && mosaic !== null){
+                			if(mosaic[id] !== undefined && mosaic[id] !== null) {
+                				//console.log(mosaic[id]);
+                				mosaic[id]['overlay'].setMap(null);
+                    		}
+                		}
+                		if (i < 6) {
+                			mosaic[id] = {'overlay':new MosaicTile(tiles[i],map,350,263)};
+               			} else {
+                			mosaic[id] = {'overlay':new MosaicTile.fromReferencePoints(tiles[i], map, 1547, 1547) };
+                		}
+                		mosaic[id]['overlay'].addListener('click',g)
+                        mosaic[id]['tile']= tiles[i];
+                		//console.log(mosaic[id]);
+                	}
+                }
+
+            });
+
+            
+            
+            //map.addListener('')
+        }
+
+        function markerListener(e) {
+            placeMarker(e.latLng,map,markerList);
+            coords.push(e.latLng);
+            console.log("coords global");
+            console.log(coords);
+            if(coords.length >= 3){
+            	for(i = 0; i < coords.length; i++){
+            		markerList[i].setMap(null);
+            	}
+            	if(lineList.length >= 1){
+            		var line = lineList.pop();
+            		line.setMap(null);
+            	}
+            	createPolygon(coords, plotsList,map);
+            	//checkButton();
+            }
+          }
+        
+        function updateDataFromServer(){
+        	dataFromServer = $.parseJSON($.ajax({
+                url:'getFarm',
+                dataType: 'json',
+                type: 'get',
+                data: {
+                    farmId: "0",
+                 },
+                 global: false,
+                 async:false,
+                success: function (data) {
+                    console.log("success: ");
+                    console.log(data);
+                    return data;
+                }
+            }).responseText);
+            console.log("dataFromServer");
+            console.log(dataFromServer);
+            fieldBoundaryList = dataFromServer["fields"];
+            
+        }
+        function drawFields(){
+        	while(fieldList.length > 0){
+        		fieldList.pop().setMap(null);
+        	}
+        	
+        	console.log("start draw field");
+        	var addListenersOnPolygon = function(polygon) {
+        		  google.maps.event.addListener(polygon, 'click', function (event) {
+        		    console.log(polygon.indexID);
+        		    polygon.setEditable(true);
+        		    
+        		    trackField(polygon);
+        		    polygonClicked = polygon.indexID;
+        		  });  
+        		}
+        	console.log(fieldBoundaryList);
+        	if(fieldBoundaryList.length !== 0){
+        		for(var i = 0; i < fieldBoundaryList.length; i++){
+        			console.log(fieldBoundaryList[i]["fieldBoundary"]);
+        			var data = [];
+        			for(var j = 0; j < fieldBoundaryList[i]["fieldBoundary"].length; j++){
+        				data.push(fieldBoundaryList[i]["fieldBoundary"][j]);
+        			}
+        			console.log(data);
+        			var field = new google.maps.Polygon({
+        			    paths: data,
+        			    strokeColor: '#FF0000',
+        			    strokeOpacity: 0.8,
+        			    strokeWeight: 3,
+        			    fillColor: '#FF0000',
+        			    fillOpacity: 0.35,
+        			    indexID: fieldBoundaryList[i]["id"]
+        			  });
+        	      	fieldList.push(field);
+        	      	field.setMap(map);
+        	      	addListenersOnPolygon(field);
+        		}
+        	}
+        }
+        function drawFarm(farmCoords,farmList){
+        	if(farmList.length == 1){
+        		farmList[0].setMap(null);
+        		farmList.pop();
+        	}
+        	var list = [];
+        	for(var i = 0; i < farmCoords.length; i++){
+        		list.push(farmCoords[i]);
+        	}
+        	list.push(farmCoords[0]);
+        	console.log(list);
+        	var plots = new google.maps.Polyline({
+    		    path: list,
+    		    geodesic: true,
+    		    strokeColor: '#FF0000',
+    		    strokeOpacity: 1.0,
+    		    strokeWeight: 2
+    		  });
+          	farmList.push(plots);
+          	plots.setMap(map);
+          	
+          	if(plotsList.length == 1){
+          		plotsList[0].setMap(null);
+          		plotsList.pop();
+          	}
+          	
+          	var i = markerList.length - 1;
+          	while(i >= 0){
+          		markerList[i--].setMap(null);
+          		markerList.pop();
+          	}
+          	while(coords.length > 0){
+          		coords.pop();
+          	}
+        }
+        
+        
+        function placeMarker(latLng,map,markerList) {
+      	  var marker = new google.maps.Marker({
+      	    position: latLng,
+      	    map: map,
+      	    icon: "icon.png"
+      	  });
+      	  markerList.push(marker);
+      }
+        
+        
+      
+      //create polygon
+      function createPolygon(coords, plotsList,map){
+      	for(i =0 ; i < coords.length; i++){
+      		console.log(i + "latitude:" + coords[i].lat() + "longtitude" + coords[i].lng());
+      		var newCord = new Coordinate(coords[i].lat(),coords[i].lng());
+      		coordinateList.push(newCord);
+      	}
+      	if(plotsList.length == 1){
+      		plotsList[0].setMap(null);
+      		plotsList.pop();
+      	}
+      	var plots = new google.maps.Polygon({
+      	    paths: coords,
+      	    strokeColor: '#28a2fa',
+      	    strokeOpacity: 0.8,
+      	    strokeWeight: 3,
+      	    fillColor: '#28a2fa',
+      	    fillOpacity: 0.35,
+            geodesic: true,
+            editable: true
+      	  });
+      	plotsList.push(plots);
+      	plots.setMap(map);
+      	trackPolygon(coords,plotsList,map);
+      }
+      
+      function trackField(polygon){
+    	  console.log("polygon");
+    	  console.log(polygon);
+    	  google.maps.event.addListener(polygon.getPath(), 'set_at',   function(){
+    		  var format = [];
+    		  for(var i = 0; i < polygon.getPath().length; i++){
+    			  var spot = {};
+    			  spot["lat"] = polygon.getPath().getAt(i).lat();
+    			  spot["lng"] = polygon.getPath().getAt(i).lng();
+    			  format.push(spot);
+    		  }
+    		  
+    		  var listIndex = 0;
+    		  for(var i = 0; i < fieldBoundaryList.length; i++){
+    			  if(fieldBoundaryList[i]["id"] === polygon.indexID){
+    				  fieldBoundaryList[i]["fieldBoundary"] = format;
+    				  listIndex = i;
+    				  break;
+    			  }
+    		  }
+    		  console.log(listIndex);
+    		  changeField(listIndex, polygon.indexID);
+          });
+          google.maps.event.addListener(polygon.getPath(), 'insert_at',function(){
+    		  var format = [];
+    		  for(var i = 0; i < polygon.getPath().length; i++){
+    			  var spot = {};
+    			  spot["lat"] = polygon.getPath().getAt(i).lat();
+    			  spot["lng"] = polygon.getPath().getAt(i).lng();
+    			  format.push(spot);
+    		  }
+    		  
+    		  var listIndex = 0;
+    		  for(var i = 0; i < fieldBoundaryList.length; i++){
+    			  if(fieldBoundaryList[i]["id"] === polygon.indexID){
+    				  fieldBoundaryList[i]["fieldBoundary"] = format;
+    				  listIndex = i;
+    				  break;
+    			  }
+    		  }
+    		  console.log(listIndex);
+    		  changeField(listIndex, polygon.indexID);
+          });
+          google.maps.event.addListener(polygon.getPath(), 'remove_at',function(){
+        	  var format = [];
+    		  for(var i = 0; i < polygon.getPath().length; i++){
+    			  var spot = {};
+    			  spot["lat"] = polygon.getPath().getAt(i).lat();
+    			  spot["lng"] = polygon.getPath().getAt(i).lng();
+    			  format.push(spot);
+    		  }
+    		  
+    		  var listIndex = 0;
+    		  for(var i = 0; i < fieldBoundaryList.length; i++){
+    			  if(fieldBoundaryList[i]["id"] === polygon.indexID){
+    				  fieldBoundaryList[i]["fieldBoundary"] = format;
+    				  listIndex = i;
+    				  break;
+    			  }
+    		  }
+    		  console.log(listIndex);
+    		  changeField(listIndex, polygon.indexID);
+          });
+    	  
+      }
+      
+      
+      function trackPolygon(coords,plotsList,map){
+    	  var myPoly = plotsList[0];
+    	  google.maps.event.addListener(myPoly.getPath(), 'set_at',   function(){
+    		  var newCoordList = [];
+        	  coords = myPoly.getPath();
+        	  for(i = 0; i < coords.length; i++){
+        		  console.log("changed path" + i + "latitude" + coords.getAt(i).lat() + "longtitude" + coords.getAt(i).lng());
+        		  var newCoord = new Coordinate(coords.getAt(i).lat(),coords.getAt(i).lng());
+        		  newCoordList.push(newCoord);
+        		  
+        	  }
+        	  coordinateList = newCoordList;
+        	  for(i = 0; i < coordinateList.length;i++){
+        		  console.log("inside list:" + coordinateList[i].lat + " , " + coordinateList[i].lng);
+        	  }
+          });
+          google.maps.event.addListener(myPoly.getPath(), 'insert_at',function(){
+        	  var newCoordList = [];
+        	  coords = myPoly.getPath();
+        	  for(i = 0; i < coords.length; i++){
+        		  console.log("changed path" + i + "latitude" + coords.getAt(i).lat() + "longtitude" + coords.getAt(i).lng());
+        		  var newCoord = new Coordinate(coords.getAt(i).lat(),coords.getAt(i).lng());
+        		  newCoordList.push(newCoord);
+        	  }
+        	  coordinateList = newCoordList;
+        	  console.log("insert_at" + myPoly.getPath());
+        	  for(i = 0; i < coordinateList.length;i++){
+        		  console.log("inside list:" + coordinateList[i].lat + " , " + coordinateList[i].lng);
+        	  }
+          });
+          google.maps.event.addListener(myPoly.getPath(), 'remove_at',function(){
+        	  var newCoordList = [];
+        	  coords = myPoly.getPath();
+        	  for(i = 0; i < coords.length; i++){
+        		  console.log("changed path" + i + "latitude" + coords.getAt(i).lat() + "longtitude" + coords.getAt(i).lng());
+        		  var newCoord = new Coordinate(coords.getAt(i).lat(),coords.getAt(i).lng());
+        		  newCoordList.push(newCoord);
+        	  }
+        	  coordinateList = newCoordList;
+        	  console.log("remove_at" + myPoly.getPath());
+        	  for(i = 0; i < coordinateList.length;i++){
+        		  console.log("inside list:" + coordinateList[i].lat + " , " + coordinateList[i].lng);
+        	  }
+          });
+          
+      }
+      
+      //send JSON data to server
+      function sendData(){
+    	  /**
+    	  var indexKey = "Field " + "1"; //index
+    	  var sendList = [];
+    	  for(i = 0; i < coordinateList.length; i++){
+    		  sendList.push([coordinateList[i].lat,coordinateList[i].lng]);
+    	  }
+    	  console.log("send list: " + sendList);
+    	  **/
+    	  if(polygonClicked == -1){
+    		  alert("Please choose field");
+    	  }
+    	  console.log("polygonClicked:" + polygonClicked);
+    	  fieldList[polygonClicked].setEditable(false);
+    	  console.log(fieldList[polygonClicked]);
+    	  var sendList = [];
+    	  var fieldBound = fieldBoundaryList[polygonClicked]["fieldBoundary"];
+    	  for(var i = 0; i < fieldBound.length; i++){
+    		  sendList.push([fieldBound[i]["lat"],fieldBound[i]["lng"]]);
+    	  }
+    	  console.log(sendList);
+    	  var map = {};
+    	  map["coordinates"] = sendList;
+    	  map["id"] = fieldBoundaryList[polygonClicked]["id"];
+    	  var e = document.getElementById("altitude1");
+    	  map["altitude"] = e.options[e.selectedIndex].value;
+    	  var data = JSON.stringify(map);
+    	  console.log("JSON Data: " + data);
+    	  
+    	  $.ajax({
+    	        type: 'post',
+    	        url: "flightplanning",
+    	        data: data,
+    	        contentType: 'application/json; charset=utf-8',
+    	        dataType: 'json',
+    	        crossDomain: true,
+    	        async : false,
+    	        success: function (response) {
+                        console.log("generating polyline: " + response["customFlightPlans"])
+                        var fields = response["customFlightPlans"];
+                        console.log("fields:" + fields);
+                        var fieldCoord = fields[fieldBoundaryList[polygonClicked]["id"]];
+                        var data = [];
+                        console.log("FieldCoord: " + fieldCoord);
+                        for(i = 0; i < fieldCoord.length; i++){
+                      	  //var coord = new Coordinate(fieldCoord[i][0], fieldCoord[i][1]);
+                      	  console.log("coord" + i + ","+ fieldCoord[i][0] +"," + fieldCoord[i][1]);
+                      	  data.push({"lat": fieldCoord[i][0], "lng": fieldCoord[i][1]});
+                      	  console.log(data);
+                        }
+                        updateDataFromServer();
+                        drawPolyline(data);
+                },
+                error: function (error) {
+                        console.log(error);
+                }
+    	    });
+    	   
+    	  
+    	  //drawPolyline(responseData);
+      }
+      
+      function showFlightPlan(){
+    	  console.log("enter show flight plan");
+    	  console.log(fieldBoundaryList);
+    	  updateDataFromServer();
+    	  for(var i = 0; i < fieldBoundaryList.length; i++){
+    		  var flightPlan = fieldBoundaryList[i]["flightPlan"];
+    		  if(flightPlan !==undefined && flightPlan !== null ){
+    			  for(var j = 0; j < flightPlan.length; j++){
+        			  if(flightPlan[j]["flightPlanCoords"] !== undefined && flightPlan[j]["flightPlanCoords"] !== null){
+            			  drawPolyline(flightPlan[j]["flightPlanCoords"]);
+            		  }
+        		  }
+    		  }
+    	  }
+      }
+      
+      function drawPolyline(responseData){
+    	  /**
+    	  responseData = [{"lat":40.08125658486821,"lng":-79.13826584815979},
+    	                  {"lat":40.08137151044353,"lng":-79.13495063781738},
+    	                  {"lat":40.08106777814471,"lng":-79.13478970527655},
+    	                  {"lat":40.080985688101606, "lng":-79.13740754127508},
+    	                  {"lat":40.080755835454426, "lng":-79.13669943809515},
+    	                  {"lat":40.08068195408162, "lng":-79.1346180438996},
+    	                  {"lat":40.07995955421218, "lng":-79.13554072380072},
+    	                  {"lat":40.07995134507872, "lng":-79.13421034812933},
+    	                  {"lat":40.0795408871434, "lng":-79.13441419601446}
+    	                  ];
+    	  **/
+    	  var polylineData = [];
+    	  console.log("start drawing polylines");
+    	  for(i = 0; i < responseData.length; i++){
+    		  var poly = {lat: responseData[i].lat, lng: responseData[i].lng};
+    		  polylineData.push(poly);
+    	  }
+    	  console.log("inside" + polylineData);
+    	  var flightPath = new google.maps.Polyline({
+    		    path: polylineData,
+    		    geodesic: true,
+    		    strokeColor: '#FF0000',
+    		    strokeOpacity: 1.0,
+    		    strokeWeight: 2
+    		  });
+
+    		  flightPath.setMap(map);
+    		  //map.setCenter(responseData[1]);
+    		  lineList.push(flightPath);
+    		  
+    		  console.log("finish");
+      }
+      
+      function changeFarm(){
+    	  var sendList = [];
+    	  for(i = 0; i < coords.length; i++){
+    		  var data = {};
+    		  data["lat"] = coords[i].lat();
+    		  data["lng"] = coords[i].lng();
+    		  sendList.push(data);
+    	  }
+    	  
+    	  var send = {};
+    	  send["coords"] = sendList;
+    	  send["farmId"] = "0";
+    	  console.log("send data");
+    	  console.log(sendList);
+    	  $.ajax({
+  	        type: 'post',
+  	        url: "modifyFarm",
+  	        data: JSON.stringify(send),
+  	        contentType: 'application/json',
+  	        async : false,
+  	        success: function (response) {
+                      console.log(response);
+                      updateDataFromServer();
+                      console.log(dataFromServer);
+                      /* drawFarm(dataFromServer["boundary"],farmList); */
+              },
+              error: function (error) {
+                  console.log(error);
+          }
+  	    });
+    	  
+      }
+      
+      function changeField(listIndex, fieldIndex){
+    	  var boundary = fieldBoundaryList[listIndex]["fieldBoundary"];
+    	  var data = {};
+    	  console.log("fieldIndex:" + fieldIndex);
+    	  data["fieldBoundary"] = boundary;
+    	  data["id"] = fieldIndex;
+    	  data["farmId"] = "0";
+    	  $.ajax({
+  	        type: 'post',
+  	        url: "modifyField",
+  	        data: JSON.stringify(data),
+  	        contentType: 'application/json',
+  	        async : false,
+  	        success: function (response) {
+                      console.log(response);
+                      updateDataFromServer();
+                      //window.location.reload();
+              },
+              error: function (error) {
+                  console.log(error);
+          }
+  	    });
+    	  
+      }
+      function addNewField(){
+    	  if(document.getElementById("fieldName").value == null || document.getElementById("fieldName").value.length == 0){
+    		  alert("Please input the field name!");
+    	  }else{
+    		  var sendList = [];
+        	  for(i = 0; i < coords.length; i++){
+        		  var data = {};
+        		  data["lat"] = coords[i].lat();
+        		  data["lng"] = coords[i].lng();
+        		  sendList.push(data);
+        	  }
+        	  var send = {};
+        	  send["coords"] = sendList;
+        	  send["fieldName"] = document.getElementById("fieldName").value;
+        	  send["farmId"] = "0";
+        	  
+        	  $.ajax({
+        	        type: 'post',
+        	        url: "addField",
+        	        data: JSON.stringify(send),
+        	        contentType: 'application/json',
+        	        async : false,
+        	        success: function (response) {
+                            console.log(response);
+                            updateDataFromServer();
+                            console.log("testtttttttttttttttt");
+                            console.log(dataFromServer);
+                            /* drawFields(); */
+                            if(plotsList.length == 1){
+                          		plotsList[0].setMap(null);
+                          		plotsList.pop();
+                          	}
+                            while(markerList.length > 0){
+                            	markerList[markerList.length - 1].setMap(null);
+                            	markerList.pop();
+                            }
+                            while(coords.length > 0){
+                          		coords.pop();
+                          	}
+                            //window.location.reload();
+                    },
+                    error: function (error) {
+                    	console.log("faillllllllllllll");
+                        console.log(error);
+                }
+        	    });
+    	  }
+    	  
+      }
+      
+      function changeFieldName(){
+    	  console.log("enter change field name");
+    	  if(document.getElementById("changeName").value == null){
+    		  alert("Please input field name!");
+    	  }
+    	  if(polygonClicked == -1){
+    		  alert("Please choose field");
+    	  }
+    	  var data = {};
+    	  data["fieldName"] = document.getElementById("changeName").value;
+    	  console.log(polygonClicked);
+    	  data["id"] = polygonClicked;
+    	  data["farmId"] = "0";
+    	  
+    	  $.ajax({
+  	        type: 'post',
+  	        url: "modifyFieldName",
+  	        data: JSON.stringify(data),
+  	        contentType: 'application/json',
+  	        async : false,
+  	        success: function (response) {
+                      console.log(response);
+                      updateDataFromServer();
+                      console.log(dataFromServer);
+                      polygonClicked = -1;
+              },
+              error: function (error) {
+                  console.log(error);
+          }
+  	    });
+    	  
+      }
+      
+        // [START region_constructor]
+        /** @constructor */
+        /* function MosaicTile(tile, map) {
+
+            // Initialize all properties.
+            console.log("start constructing mosaic: " + tile.id);
+           this.bounds_ =  new google.maps.LatLngBounds(
+                    new google.maps.LatLng(tile.bounds[0], tile.bounds[1]),
+                    new google.maps.LatLng(tile.bounds[2], tile.bounds[3]));
+            
+            var e = document.getElementById('imageType');
+            if(e.options[e.selectedIndex].value == "mrgb"){
+            	this.image_ = tile.mrgb;
+            }else{
+            	this.image_  = tile.mndvi;
+            }
+            
+            this.map_ = map;
+            this.tileId_=tile.id;//pass the id so its available on click
+            this.tile_=tile;
+            //this.setHeading(290);
+            // Define a property to hold the image's div. We'll
+            // actually create this div upon receipt of the onAdd()
+            // method so we'll leave it null for now.
+            this.div_ = null;
+
+            // Explicitly call setMap on this overlay.
+            this.setMap(map);
+
+        	
+        } */
+        
+        /**
+         * Creates a new image overlay.
+         *
+         * @class A rotated and scaled image overlay.
+         * @extends google.maps.OverlayView
+         * @param {google.maps.LatLng} ptSw the lat/long coordinate for the lower left corner of the image
+         * @param {google.maps.LatLng} ptNe the lat/long coordinate for the upper right corner of the image
+         * @param {String} image the URL of the image
+         * @param {google.maps.Map} map the map
+         * @param {monochrome.maps.ImageSize} imageSize the size of the image
+         * @example var gMap = ...obtain a google.maps.Map...
+         * srcImage = "../images/image.png";
+         * var p0 = ..first reference point pair...
+         * var p1 = ..second reference point pair...
+         * var imageSize = ...specify image width and height...
+         * monochrome.maps.ImageOverlay.fromReferencePoints (gMap, srcImage, p0, p1, imageSize);
+         */
+        
+        
+        
+        
+        // [END region_constructor]
+        // [START region_attachment]
+        /**
+         * onAdd is called when the map's panes are ready and the overlay has been
+         * added to the map.
+         */
+        MosaicTile.prototype.getTileId=function(){ return this.tileId_;}
+      //  MosaicTile.prototype.chan
+        MosaicTile.prototype.onAdd = function() {
+            var that= this;
+            var div = document.createElement('div');
+            div.style.borderStyle = 'solid';
+            div.style.borderWidth = '1px';
+            div.style.borderColor= 'rgba(255,255,255,0.4)';
+            /* div.style.borderAplha = 0.7; */
+            div.style.position = 'absolute';
+            div.style.cursor='pointer';
+
+            // Create the img element and attach it to the div.
+            var img = document.createElement('img');
+            img.src = this.image_;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.position = 'absolute';
+            img.draggable = false;
+            div.appendChild(img);
+            this.div_ = div;
+            
+            
+            
+            /**
+            * On mousedown, wait to see whether user drags mouse or releases,
+            * and either pan or show the full image accordingly.
+            */
+            var dragging = false;
+            google.maps.event.addDomListener(div, 'mousedown', function (evt) {
+                dragging = false;
+            });
+            google.maps.event.addDomListener(div, 'mousemove', function (evt) {
+                dragging = true;
+            });
+
+            google.maps.event.addDomListener( div, 'click', function(){
+            	if (dragging) { return false;} 
+                google.maps.event.trigger(that, 'click',that); // from [http://stackoverflow.com/questions/3361823/make-custom-overlay-clickable-google-maps-api-v3]
+
+            } );
+            
+            google.maps.event.addDomListener(window,'imageChange',function(e){
+                var type=e.target.options[e.target.selectedIndex].value;
+                img.src= that.tile_[type];
+                console.log(e)
+            })
+            
+            // Add the element to the "overlayLayer" pane.
+            var panes = this.getPanes();
+            panes.overlayMouseTarget.appendChild(div);
+        };
+        // [END region_attachment]
+
+        // [START region_drawing]
+        MosaicTile.prototype.draw = function() {
+        	
+            // We use the south-west and north-east
+            // coordinates of the overlay to peg it to the correct position and size.
+            // To do this, we need to retrieve the projection from the overlay.
+            var overlayProjection = this.getProjection();
+            var div = this.div_;
+            // Retrieve the south-west and north-east coordinates of this overlay
+            // in LatLngs and convert them to pixel coordinates.
+            // We'll use these coordinates to resize the div.
+            var sw = overlayProjection.fromLatLngToDivPixel(this.ptSw);
+            /* console.log(sw); */
+            var ne = overlayProjection.fromLatLngToDivPixel(this.ptNe);
+
+            /* // Resize the image's div to fit the indicated dimensions.
+            var div = this.div_;
+            div.style.left = sw.x + 'px';
+            div.style.top = ne.y + 'px';
+            div.style.width = (ne.x - sw.x) + 'px';
+            div.style.height = (sw.y - ne.y) + 'px'; */
+            
+            var dxO = ne.x - sw.x;
+            var dyO = sw.y - ne.y;
+            /* if (Math.abs (dxO) > 10000 || Math.abs (dyO) > 10000) {
+                div.style.display = "none";
+                return;
+            } */
+            
+            //div.style.display = "block";
+            
+            var dxI = this.width_;
+            var dyI = this.height_;
+            console.log(dyI);
+            var r = Math.atan2 (dyO, dxO) - Math.atan2 (dyI, dxI);
+            
+            var scale = Math.sqrt (dxO * dxO + dyO * dyO) / Math.sqrt (dxI * dxI + dyI * dyI);
+            /* console.log(Math.sqrt (dxO * dxO + dyO * dyO));
+            console.log(Math.sqrt (dxI * dxI + dyI * dyI)); */
+            // Resize the image's DIV to fit the indicated dimensions.
+            div.style.left = sw.x + 'px';
+            div.style.top = (sw.y - (scale * dxI)) + 'px';
+            div.style.width = (scale * dyI) + 'px';
+            div.style.height = (scale * dxI) + 'px';
+            
+            var transform = "rotate(" + (-r) + "rad)";
+            
+            div.style.WebkitTransform = transform;
+            div.style.MozTransform = transform;
+            div.style.transform = transform;
+            
+            var tOrigin = "0% 100%";
+            div.style.transformOrigin = tOrigin;
+            div.style.WebkitTransformOrigin = tOrigin;
+            div.style.MozTransformOrigin = tOrigin;
+        };
+        // [END region_drawing]
+
+        // [START region_removal]
+        // The onRemove() method will be called automatically from the API if
+        // we ever set the overlay's map property to 'null'.
+        MosaicTile.prototype.onRemove = function() {
+            this.div_.parentNode.removeChild(this.div_);
+            this.div_ = null;
+        };
+        /**
+         * Creates an ImageOverlay instance from a pair of reference points.
+         *
+         * @param {google.maps.Map} map the map to attach to
+         * @param {String} srcImage the URL of the image
+         * @param {monochrome.maps.MapReferencePoint} p0 the first reference point
+         * @param {monochrome.maps.MapReferencePoint} p1 the second reference point
+         * @param {monochrome.maps.ImageSize} imageSize the size of the image
+         * @type monochrome.maps.ImageOverlay
+         */
+        MosaicTile.fromReferencePoints = function (tile, map, height, width) {
+        	 
+        	var p0 = function() {
+        		this.lat = tile.bounds[1];
+            	this.lon = tile.bounds[3];
+            	this.x = 0;
+            	this.y = 0;
+        	};
+        	
+        	
+        	var p1 = function() {
+        		this.lat = tile.bounds[0];
+        		this.lon = tile.bounds[2];
+        		this.x = width;
+        		this.y = height;
+        	};
+        	
+            var xform = MosaicTile.createImageOverlayTransform (new p0, new p1);
+            var sw = xform.transform (0, 0);
+            var ne = xform.transform (width, height);
+            
+            return new MosaicTile(tile, map, height, width);
+        }
+         
+        MosaicTile.createImageOverlayTransform = function  (p0, p1) {
+        	    var lat0 = p0.lat;
+        	    var lon0 = p0.lon;
+        	    
+        	    var lat1 = p1.lat;
+        	    var lon1 = p1.lon;
+        	    
+        	    var dlat = lat1 - lat0;
+        	    var dlon = lon1 - lon0;
+        	    
+        	    var dx = p1.x - p0.x;
+        	    var dy = p1.y - p0.y;
+        	    
+        	    if (Math.abs (dlat) < 0.0001 && Math.abs (dlon) < 0.0001) {
+        	        throw new Error ("Reference pairs may not coincide. At least one of the lat/lon deltas must be greater than 0.0001.");
+        	    }
+        	    
+        	    if (Math.abs (dx) < 1 && Math.abs (dy) < 1) {
+        	        throw new Error ("Reference points may not coincide. At least one of the x/y deltas must be greater than 0.");
+        	    }
+        	    
+        	    var avgLat = (lat0 + dlat / 2);
+        	    
+        	    var r = - (Math.atan2 (-dy, dx) - Math.atan2 (dlat, dlon * Math.cos (avgLat * Math.PI / 180)));
+        	    
+        	    
+        	    var lonpp = undefined;
+        	    if (Math.abs (dlon) > 0.0001) {
+        	        lonpp = dlon / (Math.cos(r)*dx + Math.cos(r+Math.PI/2)*(-dy));
+        	    }
+        	    
+        	    var latpp = undefined;
+        	    if (Math.abs (dlat) > 0.0001) {
+        	        latpp = dlat / (Math.sin(r)*dx + Math.sin(r+Math.PI/2)*(-dy));
+        	    }
+        	    
+        	    if (latpp == undefined) {
+        	        latpp = lonpp * Math.cos (avgLat * Math.PI / 180);
+        	    }
+        	    
+        	    if (lonpp == undefined) {
+        	        lonpp = latpp / Math.cos (avgLat * Math.PI / 180);
+        	    }
+        	    
+        	    var xform = {
+        	        r : r,
+        	        latpp : latpp,
+        	        lonpp : lonpp,
+        	        
+        	        transform : function (x, y) {
+        	            var dxi = x - p0.x;
+        	            var dyi = y - p0.y;
+        	            return new google.maps.LatLng (
+        	                lat0 + Math.sin(r)*dxi * latpp + Math.sin(r+Math.PI/2)*(-dyi)*latpp,
+        	                lon0 + Math.cos(r)*dxi * lonpp + Math.cos(r+Math.PI/2)*(-dyi)*lonpp
+        	            );
+        	        }
+        	    }
+        	    return xform;
+        	};
+        
+        
+        // [END region_removal]
+        google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+     
+    <script type="text/javascript">
+    /**
+            $(function () {
+            	console.log("datetimepicker");
+                $('#farmdate').datetimepicker();
+                
+            });
+    **/
+           
+	</script>
+	
+</head>
+<body>
+
+	<div class="modal fade" id="dialog" tabindex='-1'>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="border: 0px;padding: 15px">
+        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        			<h4 class="modal-title" id="myModalLabel">Detail View</h4>
+      			</div>
+				<div class="modal-body">
+					<div id="image"></div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<div style="min-height: 580px; height: 90%" id="map">
+	
+	</div>
+	
+		<div class="container-fluid" >
+				<div id="panel">
+					<form class="form-inline" action="#">
+						<div class="row" id="col1">
+								
+							</div>
+						
+					</form>
+			</div>
+	</div>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>

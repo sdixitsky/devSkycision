@@ -1,0 +1,319 @@
+<link rel="stylesheet" href="/static/css/main.css">
+<script src="/static/js/nav.js"></script>
+<div id="header" class="cd-main-header col-md-12">
+    <a href="" class="cd-logo col-md-2"><img
+        src="static/img/styled-logo-small.png" alt="Skycision"
+        title="Skycision" height="30"></a>
+    <div ng-cloak class="col-md-6  cd-search">
+        <div class="row col-md-12">
+            <ul class="nav nav-tabs tabs-top">
+                <li ng-repeat="tabb in mc.tabs"
+                    ng-class="{active: mc.isCurrent(tabb.tabId)}"><a
+                    ng-click="mc.setTab(tabb.tabId)" data-toggle="toggle">{{tabb.title}}</a>
+                </li>
+                <li ng-show="!!currentFarm" ng-class="{active: mc.isCurrent(6)}">
+                    <a ng-click="mc.setTab(6)" data-toggle="toggle">Edit</a>
+                </li>
+                <!-- clients-dropdown -->
+            </ul>
+        </div>
+    </div>
+    <a href="" class="cd-nav-trigger"><span></span></a>
+    <nav ng-cloak class="cd-nav col-md-2">
+        <ul class="cd-top-nav">
+            <!-- /.login-tab -->
+            <ul id="user-tab" class="nav navbar-nav navbar-right">
+                <li class="dropdown"><a class="dropdown-toggle" href=""
+                    data-toggle="dropdown">{{user.given_name+' '+user.family_name+' '}}<span
+                        class="caret" style="margin-right: 10px;"></span></a>
+                    <ul id="login-dp" class="dropdown-menu">
+                        <li role="presentation" class="disabled btn-group"><a
+                            title="Coming soon" href=""><span
+                                class="glyphicon glyphicon-cog" style="margin-right: 15px"></span>
+                                Account & Settings</a></li>
+                        <li role="presentation" class="disabled btn-group"><a
+                            title="Coming soon"><span
+                                class="glyphicon glyphicon-envelope" style="margin-right: 15px"></span>
+                                Contact Support</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form>
+                                        <div class="form-group">
+                                            <button id="signOut" class="btn btn-primary btn-block"
+                                                ng-click="mc.signOut()">Sign Out</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    </ul></li>
+            </ul>
+            <!-- /.user-tab -->
+        </ul ng-controller="GraphController">
+    </nav>
+</div>
+<main class="cd-main-content">
+    <nav class="cd-side-nav">
+        <ul>
+                <li class="has-children overview" ng-cloak>
+                    <a href="">Overview</a>
+                    <ul>
+                        <li><a href="">All Data</a></li>
+                        <li><a href="">Category 1</a></li>
+                        <li><a href="">Category 2</a></li>
+                    </ul>
+                </li>
+<!--                 <li class="has-children bookmarks" ng-cloak>
+                  <a href="">Farms<span class="badge count">{{clients.length}}</span></a>
+                  <ul id="farm-list">
+                    <li ng-repeat="cl in clients"><a ng-click="mc.farmSelected(cl.opId)"  ng-bind="cl.opName"></a></li>
+                    <li role="separator" class="divider"></li>
+                    <li reuse-modal use-ctrl="CreateFarmController" instance-template="users.create-farm.view.html">&plus; New Farm</li>
+                  </ul>
+                </li> -->
+                <!-- <li class="has-children bookmarks" ng-cloak> -->
+                    <!-- <a href="">Fields</a> -->
+                    <!-- <ul id="field-list" ng-if="currentFarm" ng-init="isActive=false"> -->
+                        <!-- <li><input type="file" ng-model="fdSearch.fieldName" class="field-search" placeholder="{{isActive ? fdSearch.fieldName : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false"/></li> -->
+                        <!-- <li class="animate-repeat" ng-repeat="field in currentFarm.fields | orderBy:fieldName | filter:fdSearch.fieldName as results"><a href="">{{field.fieldName}}</a></li> -->
+                        <!-- <li class="animate-repeat" ng-if="results.length == 0"> -->
+                            <!-- </br> -->
+                            <!-- <strong>No results...</strong> -->
+                        <!-- </li> -->
+                    <!-- </ul> -->
+                <!-- </li> -->
+                <li class="has-children bookmarks" ng-cloak>
+                  <a href="">Operations<span class="badge count">{{ops.length}}</span></a>
+                  <ul id="field-list" ng-hide="isCollapsed">
+                    <li><input type="search" ng-model="opsSearch.opName" class="field-search" placeholder="{{isActive ? opsSearch.opName : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false"/></li>
+                    <li class="animate-repeat" ng-animate="'animate'" ng-repeat="op in ops | orderBy: opName | filter:opsSearch.opName as results track by op.opId"><a ng-click="mc.opSelected(op)">{{op.opName}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="animate-repeat" ng-if="results.length == 0">
+                      </br>
+                      <strong>No results...</strong>
+                    </li>
+                    <!-- <li reuse-modal use-ctrl="CreateFarmController" instance-template="users.create-farm.view.html">&plus; New Farm</li> -->
+                  </ul>
+                </li>
+                <li class="has-children bookmarks" ng-cloak>
+                    <a href="">Blocks<span class="badge count">{{selectedOp.fields.length}}</span></a>
+                    <ul id="field-list" ng-if="!!selectedOp">
+                        <li><input type="search" ng-model="blkSearch.fieldName" class="field-search" placeholder="{{isActive ? blkSearch.fieldName : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false"/></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-repeat="field in selectedOp.fields | filter:blkSearch.fieldName as results"><a href="" ng-click="mc.setBBox(feature.bbox)">{{field.fieldName}}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-if="results.length == 0">
+                          </br>
+                          <strong>No results...</strong>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-children bookmarks" ng-cloak>
+                  <a href="">Imported Operations<span class="badge count">{{operations.length}}</span></a>
+                  <ul id="field-list" ng-hide="isCollapsed">
+                    <li><input type="search" ng-model="opSearch.op_name" class="field-search" placeholder="{{isActive ? opSearch.op_name : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false"/></li>
+                    <li class="animate-repeat" ng-animate="'animate'" ng-repeat="op in operations| orderBy: op_name | filter:opSearch.op_name as results "><a ng-click="mc.setOperation(op,$index)">{{op.op_name}}</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="animate-repeat" ng-if="results.length == 0">
+                      </br>
+                      <strong>No results...</strong>
+                    </li>
+                    <!-- <li reuse-modal use-ctrl="CreateFarmController" instance-template="users.create-farm.view.html">&plus; New Farm</li> -->
+                  </ul>
+                </li>
+                <li class="has-children bookmarks" ng-cloak>
+                    <a href="">Imported Blocks<span class="badge count">{{currentOp.features.length}}</span></a>
+                    <ul id="field-list" ng-if="!!currentOp">
+                        <li><input type="search" ng-model="blkSearch.properties.BLOCK" class="field-search" placeholder="{{isActive ? blkSearch.properties.BLOCK : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false"/></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-repeat="feature in currentOp.features | filter:blkSearch.properties.BLOCK as results"><a href="" ng-click="mc.setBBox(feature.bbox)">Block {{feature.properties.BLOCK}}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-if="results.length == 0">
+                          </br>
+                          <strong>No results...</strong>
+                        </li>
+                    </ul>
+                </li>
+            <li class="has-children images hover" ng-cloak>
+                <a href="">Images</a>
+                <ul id="field-list" ng-show="selectedOp">
+                    <li>
+                        <form name="aformname" class="btn-group">
+                            <label class="btn btn-primary active">
+                                <input ng-model="data.imageTypeSelect" value="rgbList" type="radio" checked> RGB
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" ng-model="data.imageTypeSelect" value="ndviList"> NDVI
+                            </label>
+                        </div>
+                    </li>
+                    <li class="animate-repeat" ng-repeat="batch in selectedOp.batches track by $index">
+                        <a href="" ng-click="mc.loadTiles(batch,data.imageTypeSelect)">{{batch.batchName}} </a>
+                    </li>
+                    <!-- <li><a href="">All Images</a></li> -->
+                    <!-- <li><a href="">Edit Image</a></li> -->
+                </ul>
+            </li>
+<!--                    <div class="col-xs-8" id="control-div"> -->
+<!--                        <div class="col-xs-3"> -->
+<!--                            <select class="form-control" id="batch-select" -->
+<!--                                ng-model="data.batch" > -->
+<!--                                <option value="">Select Batch</option> -->
+<!--                            </select> -->
+<!--                        </div> -->
+<!--                        <div class="col-xs-3"> -->
+<!--                            <select class="form-control" name="imageTypeSelect" -->
+<!--                                id="imageTypeSelect" ng-model="data.imageTypeSelect" -->
+<!--                                ng-options="type.string as type.name disable when type.notAnOption for type in data.typeOptions" -->
+<!--                                ng-required> -->
+<!--                                <option value="">Select Type</option> -->
+                                <!-- not selected / blank option -->
+<!--                            </select> -->
+<!--                        </div> -->
+<!--                        <div class="col-xs-2"> -->
+<!--                            <label -->
+<!--                                ng-class="{'btn':true, 'btn-primary':true, 'btn-block':true, 'disabled': !data.imageTypeSelect}" -->
+<!--                                id="load-btn" -->
+<!--                                ng-click="mc.loadTiles(data.batch,data.imageTypeSelect);$event.stopPropagation()">Load</label> -->
+<!--                        </div> -->
+<!--                        <div class="col-xs-2"> -->
+<!--                            <label type="button" class="btn btn-success btn-block" -->
+<!--                                ng-click="closeDiv()">Close</label> -->
+<!--                        </div> -->
+<!--                    </div> -->
+<!--                </div> -->
+            <!-- </div> -->
+
+            <li class="has-children users" ng-cloak><a href="">Users</a>
+	            <ul>
+	                <li><a href="">All Users</a></li>
+	                <li><a href="">Edit User</a></li>
+	                <li><a href="">Add User</a></li>
+	            </ul>
+            </li>
+            <li ng-controller="feedbackController" class="users" ><a href="javascript:void(0)" ng-click="open()">Feedback</a></li>
+        <li></li>
+    </ul>
+</nav>
+<div class="content-wrapper">
+    <!--fields container -->
+    <!-- <div id="field-box" class="hide">
+            <span>field1</span><span>field2</span><span>field3</span><span>field4</span><span>field5</span><span>field6</span><span>field7</span><span>field8</span><span>field9</span><span>field10</span>
+            </div> -->
+    <!--fields container -->
+    <!-- Add panel-body and Model -->
+    <div ng-cloak class="panel-body farm-edit" ng-show="map">
+        <div id="nav-tab-content" class="tab-content">
+            
+            <div class="tab-pane" id="flights"
+                ng-class="{active: mc.isCurrent(2)}"></div>
+            <div class="tab-pane" id="weather"
+                ng-class="{active: mc.isCurrent(3)}"></div>
+            <div class="tab-pane" id="editfarm"
+                ng-class="{active: mc.isCurrent(5)}">
+                <div class="container-fluid" style="overflow: visible;">
+                    <div class="col-xs-2" ng-switch="addMode">
+                        <div ng-switch-when="false">
+                            <input type="button" class="btn btn-default btn-block"
+                                ng-click="mc.startFarmLayout()" value="Add Field">
+                        </div>
+                        <div class="col-xs-4" ng-switch-when="true">
+                            <form class="input-group" name="addfieldform" novalidate>
+                                <input name="name" type="text" class="form-control"
+                                    ng-model="newFieldName"
+                                    ng-model-options="{updateOn: 'default blur'}"
+                                    placeholder="Field Name" required ng-minlength="3"
+                                    ng-maxlength="15" autocomplete="off"> <span
+                                    class="input-group-btn">
+                                    <button
+                                        ng-class="{
+                              'btn': true,
+                              'btn-block': true,
+                              'btn-default': !addfieldform.name.$error.required,
+                              'btn-danger': addfieldform.name.$error.minlength || addfieldform.name.$error.maxlength,
+                              'btn-success': fieldInProgress && addfieldform.name.$valid,
+                              'disabled': addfieldform.$valid == false || fieldInProgress == false}"
+                                        ng-click="$event.stopPropagation(); (addfieldform.$valid && fieldInProgress) ? mc.confirmField(addfieldform.name.$modelValue) : angular.noop()">
+                                        <span
+                                            ng-class="{
+                              'glyphicon': true,
+                              'glyphicon-ok': (addfieldform.$valid === true),
+                              'glyphicon-remove-circle': (addfieldform.$valid === false)}">
+                                        </span>
+                                    </button>
+                                </span>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="container-fluid" style="position: fixed; top: 125px;"
+                        ng-if="addMode">
+                        <div class="alert alert-warning fade in alert-dismissible"
+                            role="alert"
+                            ng-show="addfieldform.name.$error.minlength || addfieldform.name.$error.maxlength">
+                            <button type="button" data-dismiss="alert" class="close"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            Please enter a field name between 3 and 15 characters.
+                        </div>
+                        <div class="alert alert-info fade in alert-dismissible"
+                            role="alert" ng-hide="fieldInProgress">
+                            <button type="button" data-dismiss="alert" class="close"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>Click</strong> at least three points on the map to define
+                            a field.
+                        </div>
+                    </div>
+                    <div class="col-xs-2" ng-show="savedFields !== false">
+                        <label type="button" class="btn btn-success btn-block"
+                            ng-click="mc.generateFields()">Confirm Fields</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label type="button" class="btn btn-success btn-block"
+                            ng-click="closeDiv()">Close</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal -->
+    <zoomin-tile></zoomin-tile>
+    <!-- /.modal -->
+    <div>
+        <div id="map-wrapper"
+            ng-hide="currentTabIndex == 3 || currentTabIndex == 4 || currentTabIndex == 5">
+            <div id="searchbox">
+                <input ng-cloak id="autocomplete-input"
+                    class="gm-style-mtc controls" type="text" placeholder="Where to?"
+                    ng-show="map" style="position: absolute; top: -50; left: 0;">
+            </div>
+            <div id="map" ng-show="map"></div>
+            <div id="spinner" style="position: fixed; left: 50%; top: 50%;"
+                ng-if="!map">
+                <large>
+                <i class="fa fa-spinner fa-spin spin-big"></i></large>
+            </div>
+        </div>
+        <div id="weather-wrapper" ng-if="currentTabIndex == 3"
+            class="col-md-12">
+            <ng-include src="'/app/weather/weather-view.html'"
+                id="weather-content"></ng-include>
+        </div>
+        <div id="upload-wrapper" ng-if="currentTabIndex == 4"
+            class="col-md-7">
+            <ng-include src="'/app/upload/upload-view.html'" id="upload-content"></ng-include>
+        </div>
+        <div id="gallery-wrapper" ng-if="currentTabIndex == 5"
+            class="col-md-12">
+            <ng-include src="'/app/gallery/tile-gallery.html'" id="gallery-content"></ng-include>
+        </div>
+    </div>
+</div>
+<!-- .content-wrapper --> </main>
+<!-- .cd-main-content -->
+<div id="footer-empty" style="height: 0px;"></div>

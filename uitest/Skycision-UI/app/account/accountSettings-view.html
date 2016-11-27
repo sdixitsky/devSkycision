@@ -1,0 +1,227 @@
+<!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css"> -->
+<div layout="column" id="accountUser" flex="60" class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <!-- <button class="btn btn-link btn-sm pull-right panel-button invite" ng-click="inviteUser($event)">
+                <i class="fa fa-plus"></i> Invite a user
+            </button> -->
+            <h3 class="panel-title">Users</h3>
+        </div>
+        <div class="panel-body account-users-list userIcon">
+            <div class="display-table highlight">
+                <div class="table-cell usr-icon-main"><i class="fa fa-user" aria-hidden="true"></i></div>
+                <div class="table-cell"><strong>{{user.givenName+' '+user.familyName+' '}} <small class="text-muted"> (YOU)</small></strong>
+                    <div>{{user.email}}</div>
+                </div>
+                <!-- <div class="table-cell text-right"><small class="text-muted">Joined 8/22/2016</small></div> -->
+            </div>
+            <!-- <div data-action="" class="display-table">
+                <div class="table-cell usr-icon-main"><i class="fa fa-user" aria-hidden="true"></i></div>
+                <div class="table-cell"><strong>abc</strong>
+                    <div>abc@gmail.com</div>
+                </div>
+                <div class="table-cell text-right"><small class="text-muted">Pending…</small></div>
+            </div> -->
+            <!-- <div>{{user | json }}</div> -->
+        </div>
+    </div>
+    <!-- Invite user -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Invite</h3>
+        </div>
+        <div class="panel-body account-users-list">
+            <div class="modal-body">
+                <p>Invite the single or multiple users, Please enter the email addresses separated by coma.</p>
+                <form name="formInvite" role="form" class="cd-form">
+                    <div class="form-group">
+                        <div class="fieldContainer" id="form-invite">
+                            <ui-select multiple sortable="true" ng-model="ac.people.selected" theme="select2" class="form-control" title="Choose a person">
+                                <ui-select-match placeholder="Select or search a person in the list...">
+                                    {{$item.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ac.people | filter: $select.search">
+                                    <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    <small ng-bind-html="item.email | highlight: $select.search"></small>
+                                </ui-select-choices>
+                            </ui-select>
+                            <!-- <div>Selected email id's: {{ac.people.selected}}</div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="create-button" ng-click="ac.invite()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Request user -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Request</h3>
+        </div>
+        <div class="panel-body account-users-list">
+            <div class="modal-body">
+                <p>Enter the name and email address of the user, and we'll send them an email inviting them to use this Skycision's account.</p>
+                <form name="formRequest" role="form" class="cd-form">
+                    <div class="form-group">
+                        <div class="fieldContainer">
+                            <label class="image-replace cd-username" for="username">Username</label>
+                            <input class="full-width has-padding has-border" id="username" name="username" type="text" placeholder="Username" ng-minlength="6" required ng-model="account.username">
+                        </div>
+                        <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="formRequest.username.$error.minlength">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Please enter atleast 6 characters.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldContainer">
+                            <label class="image-replace cd-email" for="email">E-mail</label>
+                            <input class="full-width has-padding has-border" id="email" name="email" type="email" required placeholder="E-mail" ng-model="account.email">
+                        </div>
+                        <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="formRequest.email.$error.email">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Please enter valid email</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-default" data-dismiss="modal">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="create-button" ng-click="ac.reqSubmit()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Change Password -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Change password</h3>
+        </div>
+        <div class="panel-body account-users-list">
+            <div class="modal-body">
+                <form name="formPwdChange" role="form" class="cd-form" ng-model="user">
+                    <div class="form-group">
+                        <div class="fieldContainer">
+                            <label class="image-replace cd-password" for="oldPassword">Current Password</label>
+                            <input class="full-width has-padding has-border" id="oldPassword" name="oldPassword" type="text" required placeholder="Current Password" ng-minlength="8" ng-model="user.oldPassword"> <a href="" class="hide-password">Hide</a>
+                        </div>
+                        <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="formPwdChange.oldPassword.$error.minlength">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Password must have at least 8 characters</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldContainer">
+                            <label class="image-replace cd-password" for="newPassword">New Password</label>
+                            <input class="full-width has-padding has-border" id="newPassword" name="newPassword" type="text" required placeholder="New Password" ng-minlength="8" ng-model="user.newPassword"> <a href="" class="hide-password">Hide</a>
+                        </div>
+                        <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="formPwdChange.newPassword.$error.minlength">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Password must have at least 8 characters</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-default" data-dismiss="modal">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="create-button" ng-click="ac.changePassword()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add org-id -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Add Organizational Id</h3>
+        </div>
+        <div class="panel-body account-users-list">
+            <div class="modal-body">
+                <form name="addOrgId" id="orgid" role="form" class="cd-form" ng-model="ac.neworgid">
+                    <div class="form-group">
+                        <div class="fieldContainer pull-left orgid-field">
+                            <label class="image-replace cd-password" for="orgid">Org Id</label>
+                            <input class="full-width has-padding has-border" id="orgid" name="orgid" type="text" required placeholder="Organizational Id" ng-minlength="8" ng-model="ac.neworgid">
+                        </div>
+                        <i class="fa fa-info-circle info" aria-hidden="true" popover-placement="right" uib-popover="Enter your organizational id to access this account"></i>
+                        <div class="alert alert-warning fade in alert-dismissible clear" role="alert" ng-if="addOrgId.orgid.$error.minlength">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Org Id must have at least 8 characters</span>
+                        </div>
+                    </div>
+                    <!-- div ng-if="showFbForm == false">
+                        <h4><img src="static/img/checkMark.png" class="img-emailSent"/>Organization Id added succeffully!</h4>
+                    </div> -->
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-default" data-dismiss="modal">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="create-button" ng-click="ac.handleOrgId()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Payment section -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Make a payment</h3>
+        </div>
+        <div class="panel-body account-users-list">
+            <div class="modal-body">
+                <form name="ccPay" id="orgid" role="form" class="cd-form" ng-model="ac.neworgid">
+                    <div class="form-group">
+                        <i class="icons-cc"></i>
+                    </div>
+                    <div class="form-group payment">
+                        <div class="fieldContainer pull-left orgid-field">
+                            <input class="full-width has-padding has-border" id="ccname" name="ccname" type="text" required placeholder="Name on card" ng-minlength="8" ng-model="ac.ccname">
+                        </div>
+                        <div class="alert alert-warning fade in alert-dismissible clear" role="alert" ng-if="ccPay.ccname.$error.minlength">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Please enter your name</span>
+                        </div>
+                    </div>
+                    <div class="form-group payment">
+                        <div class="fieldContainer pull-left orgid-field">
+                            <input class="full-width has-padding has-border" id="ccnum" name="ccnum" type="text" required placeholder="Valid card number" ng-minlength="8" ng-model="ac.ccnum">
+                            <a href="" class="hide-password"><i class="fa fa-credit-card-alt" aria-hidden="true"></i></a>
+                        </div>
+                        <div class="alert alert-warning fade in alert-dismissible clear" role="alert" ng-if="ccPay.ccnum.$error.minlength">
+                            <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span>Enter valid credit card number</span>
+                        </div>
+                    </div>
+                    <div class="form-group payment">
+                            <div class="row col-sm-12">
+                                <div class="fieldContainer row pull-left col-sm-3">
+                                    <input class="full-width has-padding has-border" id="ccdate" name="ccdate" type="text" required placeholder="MM / YY" ng-minlength="8" ng-model="ac.ccdate">
+                                </div>
+                                <div class="fieldContainer pull-left col-sm-3">
+                                    <input class="full-width has-padding has-border" id="cccvv" name="cccvv" type="text" required placeholder="CVV" ng-minlength="8" ng-model="ac.cccvv">
+                                </div>
+                                <div class="fieldContainer pull-left col-sm-3">
+                                    <input class="full-width has-padding has-border" id="cczip" name="cczip" type="text" required placeholder="Zip" ng-minlength="8" ng-model="ac.cczip">
+                                </div>
+                            </div>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-default" data-dismiss="modal">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="create-button" ng-click="ac.handleOrgId()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

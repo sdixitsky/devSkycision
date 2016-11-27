@@ -1,0 +1,27 @@
+{ "results":
+	[
+		{
+		  "flightId": "12345",
+		  "altitude": 1,
+		  "heading": 1,
+		  "coordinates":
+		  [
+		      {"lat":1,"lng":1},
+		      {"lat":3,"lng":1},
+		      {"lat":5,"lng":1},
+		      {"lat":7,"lng":1},
+		      {"lat":6,"lng":1},
+		      {"lat":4,"lng":1},
+		      {"lat":2,"lng":1},
+		      {"lat":8,"lng":8},
+		      {"lat":8,"lng":2},
+		      {"lat":8,"lng":6},
+		      {"lat":8,"lng":4},
+		      {"lat":8,"lng":5},
+		      {"lat":8,"lng":3},
+		      {"lat":8,"lng":7},
+		      {"lat":8,"lng":1}
+	      ]
+		}
+	]
+}

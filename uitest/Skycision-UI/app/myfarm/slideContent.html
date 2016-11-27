@@ -1,0 +1,32 @@
+<div id="myfarm-sidenav-slider">
+    <br>
+    <div class="mf-lft-list">
+        <select style="width:218px;height:35px;">
+            <option>Flight Name</option>
+        </select>
+    </div>
+    <div class="mf-lft-list">
+        <div class="input-group">
+            <input style="height: 34px !important; text-align:center;border: 1px solid #ececec !important;" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open2()">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <div class="mf-lft-list">
+        <select style="width:218px;height:35px;">
+            <option>Location</option>
+        </select>
+    </div>
+    <div class="mf-lft-list" style="position:relative">
+        <input style="width:218px;height:35px;" type="text" placeholder="Altitude" />
+        <i class="fa fa-question-circle-o" aria-hidden="true" style="position: absolute;left: 200px;top: 12px;"></i>
+    </div>
+    <div class="mf-lft-list">
+        <select style="width:218px;height:35px;">
+            <option>Frequency</option>
+        </select>
+    </div>
+</div>

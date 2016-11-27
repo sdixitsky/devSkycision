@@ -1,0 +1,30 @@
+<div style="display: inline-block;">
+    <style scoped>
+    table,
+    th,
+    td {
+        border: 1px solid grey;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+    
+    table tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+    
+    table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+    </style>
+    <h4>Block Info</h4>
+    <table ng-cloak>
+        <tr>
+            <th>Property</th>
+            <th>Value</th>
+        </tr>
+        <tr ng-repeat="data in blockData.data">
+            <td>{{ data.key }}</td>
+            <td>{{ data.val }}</td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,43 @@
+<div id="header" class="cd-main-header" flex layout="row">
+    <md-button class="md-icon-button" ng-click="hc.openMenu()" hide-gt-sm aria-label="Toggle Menu">
+        <md-icon md-svg-src="static/img/mobile-menu.svg"></md-icon>
+    </md-button>
+    <a href="" class="cd-logo" flex="none" layout="row"><img src="static/img/styled-logo-small.png" alt="Skycision" title="Skycision" height="30"></a>
+    <div ng-cloak class="cd-search header-tabs" flex="75" layout="column">
+        <div ui-view="tabs"></div>
+    </div>
+    <nav ng-cloak class="cd-nav" flex="15" layout="row">
+        <!-- <pre style="overflow: visible;position:absolute; z-index: 1000">{{user | json}}</pre> -->
+        <ul class="cd-top-nav" flex layout="row">
+            <ul id="user-tab" class="nav navbar-nav navbar-right">
+                <li class="dropdown"><a class="dropdown-toggle" href="" data-toggle="dropdown">{{user.givenName+' '+user.familyName+' '}}
+                <span class="caret"></span></a>
+                    <ul id="login-dp" class="dropdown-menu">
+                        <li role="presentation" class="disabled btn-group" >
+                            <a title="Account Settings" href="#/account">
+                                <i class="fa fa-wrench"></i> Account & Settings
+                            </a>
+                        </li>
+                        <li role="presentation" class="disabled btn-group">
+                                <a title="coming soon" href="#/faq">
+                                	<i class="fa fa-life-ring"></i> Contact Support
+                                </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form>
+                                        <div class="form-group">
+                                            <button id="signOut" class="btn btn-primary btn-block" ng-click="signOut()">Sign Out</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,17 @@
+<td ng-repeat="col in $columns track by $index">
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <div class="line-height" ng-repeat="displayField in col.displaygroup.stats">
+                <flight-stats></flight-stats>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="line-height" ng-repeat="link in col.displaygroup.links">
+                <flight-downloads></flight-downloads>
+            </div>
+        </div>
+    </div>
+    <div ng-if="$last">
+        <img ng-src="{{::flight.previewUrl}}"/>
+    </div>
+</td>

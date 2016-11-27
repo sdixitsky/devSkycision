@@ -1,0 +1,117 @@
+<header role="banner">
+    <div id="cd-logo">
+        <a href=""><img src="/static/img/portfolio/skycision-logo-white-188x28.png" alt="Logo" width="188" height="28"></a>
+    </div>
+</header>
+<div id="joinUs" ng-controller="paymentController">
+    <div class="txt-center">
+        <h3>Join Us!</h3>
+        <p>Skycision provides a data-driven farm management platform built around the collection and processing of high-resolution aerial imagery.</p>
+    </div>
+    <hr>
+    <div layout="row" flex="40" class="container join-main">
+        <div id="cd-signup" flex ng-init="account={username:null,email:null,password:null,address:null}">
+            <!-- sign up form -->
+            <form role="form" name="form" class="cd-form" ng-model="account">
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="givenName">First Name</label>
+                        <input class="full-width has-padding has-border" id="givenName" name="givenName" type="text" placeholder="First name" ng-minlength="3" required ng-model="account.given_name">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.givenName.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 3 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="familyName">Last Name
+                        </label>
+                        <input class="full-width has-padding has-border" id="familyName" name="familyName" type="text" placeholder="Last name" ng-minlength="3" required ng-model="account.familyName">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.familyName.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 3 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="userName">Username</label>
+                        <input class="full-width has-padding has-border" id="userName" name="userName" type="text" placeholder="Username" ng-minlength="6" ng-model="account.username">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.userName.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter atleast 6 characters.</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-username" for="address">Address</label>
+                        <input class="full-width has-padding has-border" id="address" name="address" type="text" placeholder="Address (optional)" ng-model="account.address" ng-autocomplete>
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.address.$error.address">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter valid address</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-email" for="email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="email" name="email" type="email" required placeholder="E-mail" ng-model="account.email">
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.email.$error.email">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Please enter valid email</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="password">Password</label>
+                        <input class="full-width has-padding has-border" id="password" name="password" type="password" required placeholder="Password" ng-minlength="8" ng-model="account.password"> <a href="" ng-click="sc.togglePasswordShow()" class="hide-password">Show</a>
+                    </div>
+                    <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.password.$error.minlength">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Password must have at least 8 characters</span>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="fieldContainer">
+                        <label class="image-replace cd-password" for="pw2">Confirm Password</label>
+                        <input class="full-width has-padding has-border" id="pw2" name="pw2" type="password" required placeholder="Confirm Password" ng-model="account.pw2" confirm-password="account.password"> <a href="" ng-click="sc.togglePasswordShow()" class="hide-password">Show</a>
+                    </div>
+                    <!-- <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.pw2.$error.confirmPassword">
+                        <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span>Your passwords did not match</span>
+                    </div> -->
+                </div>
+                <div class="fieldset">
+                    <input type="checkbox" id="signup-terms" name="signup.terms" required>
+                    <label for="accept-terms" class="terms">I agree to the <a href="" reuse-modal instance-template="signup-terms.partial.html" use-ctrl="termsController">Terms &amp; Conditions</a>
+                    </label>
+                </div>
+                <div class="fieldset">
+                    <input class="full-width has-padding" type="submit" value="Create account" ng-disabled="(signup.$valid === false)" ng-click="sc.registerUser(account)" ng-required="terms">
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer class="footer">
+        <div>
+            <p>Copyright © 2015 Skycision</p>
+        </div>
+    </footer>
+</div>

@@ -1,0 +1,32 @@
+<md-dialog layout="column" flex="30">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <!-- <h4 class="modal-title" id="modalViewTitle">Invite a user to Skycision</h4> -->
+    </div>
+    <!-- /.modal-header -->
+    <div class="modal-body">
+    	<p>Please enter the organizational id.</p>
+        <form name="form" role="form" class="cd-form">
+            <div class="form-group">
+            {{user}}
+                <div class="fieldContainer">
+                    <label class="image-replace cd-username" for="orgId">Org Id</label>
+                    <input class="full-width has-padding has-border" id="orgId" name="orgId" type="text" placeholder="Org Id" ng-minlength="6" required ng-model="user.username">
+                </div>
+                <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.orgId.$error.minlength">
+                    <button type="button" data-dismiss="alert" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <span>Please enter valid orgId.</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.modal-body -->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">I'll add later</button>
+        <button type="button" class="btn btn-primary" id="create-button" ng-click="send()">Send</button>
+    </div>
+</md-dialog>

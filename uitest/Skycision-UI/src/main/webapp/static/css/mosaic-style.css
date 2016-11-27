@@ -1,0 +1,490 @@
+/*@import url('/static/css/font-awesome.css');*/
+@import url("/static/css/bootstrap.min.css");
+/*@import url("/static/css/bootstrap-theme.min.css");*/
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #e8e8e8;
+}
+
+.abcRioButton.abcRioButtonRed:focus {
+    -webkit-box-shadow: 0 2px 4px 0px rgba(0, 0, 0, .25);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .25);
+}
+
+.abcRioButton.abcRioButtonRed:hover {
+    -webkit-box-shadow: 0 2px 4px 0px rgba(0, 0, 0, .25);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .25);
+    cursor: pointer;
+}
+
+/*#map.container-fluid {
+    height: calc(100% - 75px);
+    width: 100%;
+    position: absolute;
+    top:75px;
+    padding-top: 40px;
+}*/
+
+#panel {
+    text-align: center;
+    padding-top: 20px;
+}
+
+#contact {
+    width: 100%;
+    height: 100%;
+    opacity: .95;
+    top: 0;
+    left: 0;
+    display: none;
+    position: fixed;
+    background-color: #313131;
+    overflow: auto
+}
+
+#farmListDiv {
+    width: 100%;
+    height: 100%;
+    opacity: .95;
+    top: 0;
+    left: 0;
+    display: none;
+    position: fixed;
+    background-color: #313131;
+    overflow: auto;
+    z-index: 10000;
+}
+
+
+/*#gallery_01 img{border:2px solid white;}*/
+
+div#popupContact {
+    position: absolute;
+    left: 50%;
+    top: 17%;
+    margin-left: -202px;
+    font-family: 'Raleway', sans-serif;
+}
+
+div#zoom-full-div {
+    z-index: 999;
+    padding: 0px;
+    height: 100%;
+    margin: 0px;
+}
+
+h2 {
+    color: white;
+    padding: 20px 35px;
+    margin: -10px -50px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+}
+
+p {
+    background-color: #FEFFED;
+    padding: 20px 35px;
+    margin: -10px -50px;
+    text-align: left;
+    border-radius: 10px 10px 0 0;
+}
+
+.zoomWindowContainer {
+    z-index: 999;
+}
+
+#zoom-thumb-div {
+    padding: 0px;
+}
+
+#zoom-thumb-img {
+    width: 100%;
+    height: 100%;
+}
+
+.zoomWindow {
+    z-index: 999;
+    /*float: right;*/
+}
+
+.zoomContainer {
+    z-index: 1100;
+}
+
+#zoom-container {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+#zoom-dialog {
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    margin: 0px;
+    border: 0px;
+}
+
+#small-dialog .modal {
+    position: relative;
+    vertical-align: middle;
+    width: 25%;
+    height: 25%;
+}
+
+#small-dialog .modal-dialog {
+    background-color: transparent;
+    position: relative;
+}
+
+#small-dialog .modal-dialog .modal-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#small-dialog .modal-dialog .modal-content .modal-body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#dialog .modal-dialog .modal-content {
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    border: 0px;
+    background-color: #fff;
+}
+
+#x .modal-dialog .modal-content .modal-header {
+    border-radius: 0.5rem 0.5rem 0 0;
+    background-color: #e8e8e8;
+    padding: 1rem;
+    height: 4.5rem;
+}
+
+#dialog .modal-dialog .modal-content .modal-body {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    text-align: left;
+    padding-bottom: 6.5rem !important;
+    padding-top: 2rem !important;
+}
+
+#dialog .modal-dialog .modal-content .modal-header .modal-title {
+    color: #12548A;
+}
+
+
+/*#dialog.modal.fade.fast .modal-dialog {
+  -webkit-transition: -webkit-transform .15s ease-out !important;
+     -moz-transition:    -moz-transform .15s ease-out !important;
+       -o-transition:      -o-transform .15s ease-out !important;
+          transition:         transform .15s ease-out !important;
+  -webkit-transform: translate(0, 0) !important;
+      -ms-transform: translate(0, 0) !important;
+          transform: translate(0, 0) !important;
+}*/
+
+.img-responsive {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+.navbar.navbar-default {
+    margin-bottom: 0px;
+    z-index: 1;
+}
+
+div#infoPanel.panel.panel-default {
+    background-color: rgba(0, 0, 0, 0.2);
+    /*float: left !important;*/
+    height: auto;
+    width: 100% !important;
+    border: 0;
+    margin-top: 20%;
+    margin-bottom: 15px;
+}
+
+dt {
+    width: 80px;
+}
+
+.navbar-text {
+    background: inherit;
+    padding: 0px;
+    /*margin: 0px;*/
+}
+
+#login-dp {
+    min-width: 250px;
+    padding: 14px 14px 0;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+#login-dp .help-block {
+    font-size: 12px
+}
+
+#login-dp .bottom {
+    background-color: rgba(255, 255, 255, 1);
+    border-top: 1px solid #ddd;
+    clear: both;
+    padding: 14px;
+}
+
+#login-dp .social-buttons {
+    margin: 12px 0
+}
+
+#login-dp .social-buttons a {
+    width: 49%;
+}
+
+#login-dp .form-group {
+    margin-bottom: 10px;
+}
+
+.btn-fb {
+    color: #fff;
+    background-color: #3b5998;
+}
+
+.btn-fb:hover {
+    color: #fff;
+    background-color: #496ebc
+}
+
+.btn-tw {
+    color: #fff;
+    background-color: #55acee;
+}
+
+.btn-tw:hover {
+    color: #fff;
+    background-color: #59b5fa;
+}
+
+.btn-layout-farm {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#b4e391+0,b4e391+1,61c419+100 */
+    background: #61c419;
+    /* Old browsers */
+    border-radius: 4px;
+}
+
+.panel.with-nav-tabs .panel-heading {
+    padding: 0px 5px 0 5px;
+    height: 50px;
+}
+
+.panel.with-nav-tabs .nav-tabs {
+    border-bottom: none;
+}
+
+.panel.with-nav-tabs .nav-justified {
+    margin-bottom: -1px;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li {
+    min-width: 100px;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li > a {
+    margin-top: 8px;
+    text-align: center;
+}
+
+.panel-body {
+    padding: 10px;
+}
+
+
+/********************************************************************/
+
+
+/*** PANEL DEFAULT ***/
+
+.with-nav-tabs.panel-default .nav-tabs {
+    height: 50px;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li > a,
+.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > .open > a,
+.with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
+.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+    background-color: #ddd;
+    border-color: transparent;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li.active > a,
+.with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
+    color: #555;
+    background-color: #fff;
+    border-color: #ddd;
+    border-bottom-color: transparent;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
+    color: #777;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+    background-color: #ddd;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+    color: #fff;
+    background-color: #555;
+}
+
+
+/*.with-nav-tabs.panel-default .nav-pills > li > a,
+.with-nav-tabs.panel-default .nav-pills > li > a:hover,
+.with-nav-tabs.panel-default .nav-pills > li > a:focus {
+	color: #777;
+}
+.with-nav-tabs.panel-default .nav-pills > .open > a,
+.with-nav-tabs.panel-default .nav-pills > .open > a:hover,
+.with-nav-tabs.panel-default .nav-pills > .open > a:focus,
+.with-nav-tabs.panel-default .nav-pills > li > a:hover,
+.with-nav-tabs.panel-default .nav-pills > li > a:focus {
+	color: #777;
+	background-color: #ddd;
+	border-color: transparent;
+}
+.with-nav-tabs.panel-default .nav-pills > li.active > a,
+.with-nav-tabs.panel-default .nav-pills > li.active > a:hover,
+.with-nav-tabs.panel-default .nav-pills > li.active > a:focus {
+	color: #555;
+	background-color: #fff;
+	border-color: #ddd;
+	border-bottom-color: transparent;
+}
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu {
+	background-color: #f5f5f5;
+	border-color: #ddd;
+}
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu > li > a {
+	color: #777;   
+}
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu > li > a:hover,
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu > li > a:focus {
+	background-color: #ddd;
+}
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu > .active > a,
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu > .active > a:hover,
+.with-nav-tabs.panel-default .nav-pills > li.dropdown .dropdown-menu > .active > a:focus {
+	color: #fff;
+	background-color: #555;
+}*/
+
+.tab-content,
+.tab-pane>p {
+    background: #fff;
+    border-radius: 4px;
+    border-color: #e7e7e7;
+}
+
+.tab-pane>p {
+    margin: 0px;
+}
+
+.dropdown-menu {
+    background: #fff;
+}
+
+.dropdown-menu>li>a {
+    color: #337ab7;
+}
+
+.dropdown-menu>li>a:focus {
+    color: #555;
+}
+
+.panel-default>.panel-heading .badge {
+    background-color: #999;
+}
+
+#dialog.modal.fade.fast .modal-dialog {
+    -webkit-transition: -webkit-transform .1s ease-out;
+    -moz-transition: -moz-transform .1s ease-out;
+    -o-transition: -o-transform .1s ease-out;
+    transition: transform .1s ease-out;
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+
+.btn-success:focus,
+.btn-success:hover {
+    background-position: 0 0;
+}
+
+.spin-big {
+    font-size: 50px;
+    height: 50px;
+    width: 50px;
+    margin-top: -25px;
+    margin-left: -25px;
+}
+
+
+/*
+@media ( min-width : 768px) {
+	.modal-fullscreen .modal-dialog {
+		width: 750px;
+	}
+}
+
+@media ( min-width : 992px) {
+	.modal-fullscreen .modal-dialog {
+		width: 900px;
+	}
+}
+
+@media ( min-width : 1200px) {
+	.modal-fullscreen .modal-dialog {
+		width: 1170px;
+	}
+}
+
+@media ( min-width : 1600px) {
+	.modal-fullscreen .modal-dialog {
+		width: 1440px;
+	}
+}
+
+@media ( min-width : 1800px) {
+	.modal-fullscreen .modal-dialog {
+		width: 1600px;
+	}
+}*/

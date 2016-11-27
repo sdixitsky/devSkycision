@@ -1,0 +1,41 @@
+<!-- <script>
+    $('#autocomplete-input').css("left","600px");
+</script> -->
+<div class="content-wrapper" flex layout="column">
+    <ng-material-loader data-show="mc.show"></ng-material-loader>
+    <div id="map-wrapper" ng-class="{'true': 'expandControls'}[expandctrls]">
+        <div wt-step="1" wt-group="tour" wt-position="right" style="position:absolute;z-index:104;width:1px;height:1px;background:transparent;left:30%">
+            <wt-step-content>
+                WELCOME TO <strong>SKYCISION!</strong>.
+                <br />
+                <br/>You started the tour, nice.
+                <br />
+                <br />
+                <br /> Click <strong>Next</strong> to continue the tour.
+            </wt-step-content>
+        </div>
+        <div flex="{{state.data.contentWidth || 5}}" layout-padding layout="row" layout-fill class="slider-menu slider-effect">
+            <!--  <md-progress-circular class="md-accent loading-icon-align" md-mode="indeterminate" ng-show="isLoading" md-diameter="100"></md-progress-circular> -->
+            <div ui-view="content" flex style="background: transparent"></div>
+        </div>
+        <div id="searchbox">
+            <!-- <input ng-cloak id="autocomplete-input" class="gm-style-mtc controls" type="text" placeholder="Where to?" ng-show="map"> -->
+        </div>
+        <map-component map-source="getMap()"></map-component>
+        <side-nav-slide>
+            <div ng-include="'templates/root/slideContent.html'"></div>
+        </side-nav-slide>
+        <div class="clr-bounds">
+            <button>Clear all Points</button>
+        </div>
+        <div id="customDrawTool">
+            <div class="mapContrlToggleBtns toggleBtn" ng-click="expandctrls = !expandctrls;">
+            </div>
+        </div>
+    </div>
+    <ui-view name="detail"></ui-view>
+</div>
+<script>
+    $('#autocomplete-input').css("left","600px");
+</script>
+

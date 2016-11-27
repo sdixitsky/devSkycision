@@ -1,0 +1,118 @@
+<md-sidenav class="md-sidenav-left" layout="column" flex md-component-id="left" hide-print md-is-locked-open="$mdMedia('gt-sm')" style="width:230px;" flex>
+    <md-content flex role="Navigation" flex layout="column">
+        <nav class="cd-side-nav" flex layout="column">
+            <ul flex layout="column">
+                <li class="has-children" ng-cloak>
+                    <a href="" wt-step="6" wt-group="tour" wt-position="right">
+                        <i class="fa fa-home"></i>Operations<span class="badge count">{{ops.length}}</span>
+                        <wt-step-content>
+                            Select your operation and you can view the boundaries on the map with respective blocks.
+                            <br />
+                            <br />
+                            <br /> Click <strong>Next</strong> to continue the tour.
+                        </wt-step-content>
+                        <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
+                    </a>
+                    <ul id="field-list" ng-hide="isCollapsed">
+                        <li id="search">
+                            <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i>
+                                <span class="sr-only">Search</span></label>
+                            <input type="search" ng-model="opsSearch.opName" class="field-search" placeholder="{{isActive ? opsSearch.opName : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false" />
+                        </li>
+                        <li class="animate-repeat" ng-animate="'animate'" ng-repeat="op in ops | orderBy: opName | filter:opsSearch.opName as results track by op.opId"><a ui-sref=".detail({detail: op.opId})">{{op.opName}}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-if="results.length == 0">
+                            <br/>
+                            <strong>No results...</strong>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-children" ng-cloak><a href=""><i
+                        class="fa fa-cubes"></i>Blocks<span class="badge count">{{selectedOp.fields.length}}</span><i
+                        class="fa fa-chevron-right pull-right" aria-hidden="true"></i></a>
+                    <ul id="field-list" ng-if="!!selectedOp">
+                        <li id="search">
+                            <label for="search-input">
+                                <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Search</span>
+                            </label>
+                            <input type="search" ng-model="blkSearch.fieldName" class="field-search" placeholder="{{isActive ? blkSearch.fieldName : 'Search...'}}" ng-focus="isActive = true" ng-blur="isActive = false" />
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-repeat="field in selectedOp.fields | filter:blkSearch.fieldName as results">
+                            <a href="" ng-click="mc.setBBox(feature.bbox)">{{field.fieldName}}</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="animate-repeat" ng-if="results.length == 0">
+                            <br/> <strong>No results...</strong></li>
+                    </ul>
+                </li>
+                <li class="has-children images hover" ng-cloak>
+                    <a href="">
+                        <i class="fa fa-file-image-o"></i>Images<i class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
+                    </a>
+                    <ul id="field-list" ng-show="selectedOp">
+                    </ul>
+                </li>
+                <!-- <li reuse-modal use-ctrl="CreateFarmController" class="new-farm" ng-click="showAdvanced($event)">
+                    <i class="fa fa-object-ungroup"></i>Add Farm <i class="fa fa-plus pull-right" aria-hidden="true"></i>
+                </li> -->
+                <li use-ctrl="CreateFarmController" ng-click="showAdvanced($event)">
+                    <a href="" wt-step="7" wt-group="tour" wt-position="right">
+                        <i class="fa fa-object-ungroup"></i>Add Farm
+                        <i class="fa fa-plus pull-right" aria-hidden="true"></i>
+                        <wt-step-content>
+                            Click here to add 'New Farm'.
+                            <br />
+                            And give the Farm name and address to save.
+                            <br />
+                            <br /> Click <strong>Next</strong> to continue the tour.
+                        </wt-step-content>
+                    </a>
+                </li>
+                <!-- instance-template="users.create-farm.view.html" -->
+                <li ng-controller="feedbackController">
+                    <a href="" wt-step="8" wt-group="tour" wt-position="right" ng-click="open()"><i class="fa fa-envelope" aria-hidden="true"></i>Feedback
+                    <wt-step-content>
+                        Add your comments here.
+                        <br />
+                        <br />
+                        Thanks for visiting <strong>Skycision</strong>.
+                        <br />
+                        <br />
+                        Click <strong>Finish</strong> to return.
+                      </wt-step-content>
+                    </a>
+                </li>
+                <li ng-cloak>
+                    <a href="javascript:void(0)" class="borderBtm0">
+                        <i class="fa fa-bell" aria-hidden="true"></i></i>Notifications
+                    </a>
+                    <ul id="field-list" class="notification">
+                        <li>
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>Potential irrigation leak
+                        </li>
+                        <li>
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>Weed warning
+                        </li>
+                        <li>
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>Slower than expected growth
+                        </li>
+                    </ul>
+                </li>
+                <li class="mb-link" role="presentation">
+                    <a title="Coming soon" href=""><i class="fa fa-wrench"></i>Account &amp; Settings</a>
+                </li>
+                <li class="mb-link" role="presentation">
+                    <a title="Coming soon"><i class="fa fa-life-ring"></i>Contact Support</a>
+                </li>
+                <li ng-controller="HeaderController" class="mb-link signout-btn">
+                    <a href="">
+                        <button id="signOut" class="btn btn-primary btn-block" ng-click="signOut()">Sign Out</button>
+                    </a>
+                </li>
+                <uploader-target target-id="nav-uploader" style="position:absolute;bottom:0;"></uploader-target>
+            </ul>
+            <!-- <pre style="position: relative; bottom: 0">{{state | json}}</pre> -->
+        </nav>
+    </md-content>
+</md-sidenav>

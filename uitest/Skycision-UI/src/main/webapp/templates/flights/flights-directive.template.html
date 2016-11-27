@@ -1,0 +1,16 @@
+<tr ng-if="flight.expanded" ng-repeat-end="">
+	<td ng-repeat="col in $columns">
+		<div class="col-md-12">
+			<div class="col-md-6">
+				<div ng-repeat="displayField in col.displaygroup.stats">
+					{{flight[displayField]}}</div>
+			</div>
+			<div class="col-md-6">
+				<div ng-repeat="link in col.displaygroup.links">
+					<a ng-href="{{flight[link + 'Url']}}" download>{{link | uppercase}} <span class="icon_download"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</td>
+</tr>

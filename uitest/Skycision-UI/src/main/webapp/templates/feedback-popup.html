@@ -1,0 +1,25 @@
+<form role="form" name="form" id="cdForm" class="cd-form" >
+	<div ng-if="showFbForm == true">
+		<div class="modal-body">
+				<div class="feed-area">
+						<textarea ng-model="feedback.text" id="feedbackText" name="feedbackText" placeholder="Please type your feedback here." ng-minlength="15" required  class="col-sm-12"></textarea>
+						<div class="alert alert-warning fade in alert-dismissible" role="alert" ng-if="form.feedbackText.$error.minlength">
+							<button type="button" data-dismiss="alert" class="close" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<span>Please enter atleast 15 characters</span>
+						</div>
+				</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="button" ng-click="submit()">Submit</button>
+			  <!--  <input class="btn btn-primary" type="submit" value="send" ng-click="submit()" /> -->
+			<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+		</div>
+	</div>
+	<div class="modal-body" 
+		 ng-if="showFbForm == false">
+		<h3><img src="static/img/checkMark.png" class="img-emailSent"/>Email sent successfully!</h3>
+		<button class="btn btn-warning btn-close" type="button" ng-click="cancel()">Close</button>
+	</div>
+</form>

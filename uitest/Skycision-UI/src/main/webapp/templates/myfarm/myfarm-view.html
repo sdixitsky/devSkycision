@@ -1,0 +1,191 @@
+<!-- <div layout="column" flex="100"> -->
+<div class="col-sm-12">
+    <side-nav-slide>
+        <div ng-include="'templates/myfarm/slideContent.html'"></div>
+    </side-nav-slide>
+    <div class="col-sm-8">
+        <div>
+            <div class="pull-left">
+                <select>
+                    <option>Farm1</option>
+                    <option>Farm2</option>
+                </select>
+            </div>
+            <div class="pull-right">
+                <button>Add/Edit Fields</button>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <uib-accordion close-others="oneAtATime">
+                <div ng-repeat="field in fields" style="margin-bottom:20px">
+                    <div uib-accordion-group class="panel-default" is-open="status.open">
+                        <uib-accordion-heading>
+                            <div class="row marRght0">
+                                <div>
+                                    <div class="pull-left col-sm-3">{{field.name}}</div>
+                                    <div class="pull-left col-sm-3">{{field.acres}}</div>
+                                    <div class="pull-left col-sm-3">{{field.crop}}</div>
+                                </div>
+                                <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-right': !status.open}"></i>
+                            </div>
+                        </uib-accordion-heading>
+                        <div class="row">
+                            <div class="pull-left col-sm-3"><img src="" style="background:#3399cc; width:150px;height:150px;margin-right:20px;" />
+                            </div>
+                            <div class="pull-left col-sm-3">
+                                <div>
+                                    <button>New Event</button>
+                                    <br>
+                                    <br>
+                                    <button>Copy Saved Event</button>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="pull-left" style="margin-right: 10px;">
+                                    <select ng-model="field.selectedcroplife" ng-options="cropl.id as cropl.name for cropl in defaultCropLifeOptions" style="width: 105px;height: 25px;border-radius: 3px;background: #fff;">
+                                        <option value="">---Select---</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="input-group">
+                                        <input style="height: 34px !important; text-align:center;border: 1px solid #ececec !important;" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="open1()">
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <textarea style="margin-top: 10px;margin-bottom: 10px;height: 60px;width: 275px;border-radius: 3px;"> </textarea>
+                                </div>
+                                <div>
+                                    <div class="pull-left" style="margin-right: 20px;">
+                                        <select style="height: 25px;border-radius: 3px;background: #fff;">
+                                            <option value="Apply to other fields">Apply to other fields</option>
+                                            <option value="Apply to this field only">Apply to this field only</option>
+                                        </select>
+                                    </div>
+                                    <div style="/* float: right; */">
+                                        <div class="pull-left" style="padding-right: 10px;">
+                                            <button ng-click="saveField(field)" style="border-radius: 3px;padding: 0 10px;border: 1px solid transparent;height: 25px;width: 65px;">Save</button>
+                                        </div>
+                                        <div style="font-size: 18px;">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px" class="col-sm-12">
+                            <article ng-if="status.open">
+                                <rzslider rz-slider-model="slider_ticks.value" rz-slider-options="slider_ticks.options"></rzslider>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </uib-accordion>
+        </div>
+        <!-- <div>
+        <uib-accordion close-others="oneAtATime">
+            <div uib-accordion-group class="panel-default" is-open="status.open">
+                <uib-accordion-heading>
+                    <div class="row marRght0">
+                        <div>
+                            <div class="pull-left col-sm-3">Field4</div>
+                            <div class="pull-left col-sm-3">36 acres</div>
+                            <div class="pull-left col-sm-3">Oranges</div>
+                        </div>
+                        <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-right': !status.open}"></i>
+                    </div>
+                </uib-accordion-heading>
+                <div>
+                    <div class="pull-left"><img src="" style="background:#3399cc; width:150px;height:150px;margin-right:20px;" /></div>
+                    <div>
+                        <button>New Event</button>
+                        <br>
+                        <br>
+                        <button>Copy Saved Event</button>
+                    </div>
+                </div>
+            </div>
+        </uib-accordion>
+    </div>
+    <div>
+        <uib-accordion close-others="oneAtATime">
+            <div uib-accordion-group class="panel-default" is-open="status.open">
+                <uib-accordion-heading>
+                    <div class="row marRght0">
+                        <div>
+                            <div class="pull-left col-sm-3">Field3</div>
+                            <div class="pull-left col-sm-3">34 acres</div>
+                            <div class="pull-left col-sm-3">Oranges</div>
+                        </div>
+                        <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-right': !status.open}"></i>
+                    </div>
+                </uib-accordion-heading>
+                <div>
+                    <div class="pull-left"><img src="" style="background:#3399cc; width:150px;height:150px;margin-right:20px;" /></div>
+                    <div>
+                        <button>New Event</button>
+                        <br>
+                        <br>
+                        <button>Copy Saved Event</button>
+                    </div>
+                </div>
+            </div>
+        </uib-accordion>
+    </div>
+    <div>
+        <uib-accordion close-others="oneAtATime">
+            <div uib-accordion-group class="panel-default" is-open="status.open">
+                <uib-accordion-heading>
+                    <div class="row marRght0">
+                        <div>
+                            <div class="pull-left col-sm-3">Field2</div>
+                            <div class="pull-left col-sm-3">39 acres</div>
+                            <div class="pull-left col-sm-3">Oranges</div>
+                        </div>
+                        <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-right': !status.open}"></i>
+                    </div>
+                </uib-accordion-heading>
+                <div>
+                    <div class="pull-left"><img src="" style="background:#3399cc; width:150px;height:150px;margin-right:20px;" /></div>
+                    <div>
+                        <button>New Event</button>
+                        <br>
+                        <br>
+                        <button>Copy Saved Event</button>
+                    </div>
+                </div>
+            </div>
+        </uib-accordion>
+    </div>
+    <div>
+        <uib-accordion close-others="oneAtATime">
+            <div uib-accordion-group class="panel-default" is-open="status.open">
+                <uib-accordion-heading>
+                    <div class="row marRght0">
+                        <div>
+                            <div class="pull-left col-sm-3">Field1</div>
+                            <div class="pull-left col-sm-3">31 acres</div>
+                            <div class="pull-left col-sm-3">Oranges</div>
+                        </div>
+                        <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-right': !status.open}"></i>
+                    </div>
+                </uib-accordion-heading>
+                <div>
+                    <div class="pull-left"><img src="" style="background:#3399cc; width:150px;height:150px;margin-right:20px;" /></div>
+                    <div>
+                        <button>New Event</button>
+                        <br>
+                        <br>
+                        <button>Copy Saved Event</button>
+                    </div>
+                </div>
+            </div>
+        </uib-accordion>
+    </div> -->
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<div md-theme="default" class="slider-container slider-effect {{state.data.sliderOpen === true ? 'slider-menu-open' :'slider-menu-closed'}}">
+	<div ui-view="header"></div>
+	<main class="cd-main-content" layout="row" layout-align="stretch">
+		<div ui-view="nav" layout="column"></div>
+		<div ui-view="main" flex layout="column"></div> 
+	</main>
+</div>

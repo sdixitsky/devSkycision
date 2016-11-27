@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<title>Skycision Beta</title>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" type="image/png" href="static/img/favicon.png">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/dropzone.css" async defer>
+    <link rel="stylesheet" href="/static/css/ngGallery.css" async defer>
+    <link rel="stylesheet" href="/static/css/nv.d3.min.css" async defer>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" async defer>
+    <link rel="stylesheet" href="/static/css/ng-table.min.css" async defer>
+    <link rel="stylesheet" href="static/css/angular-walkthrough.min.css" async defer/>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="static/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/css/signup-style.css">
+    <link rel="stylesheet" href="/static/css/angular-material.min.css">
+    <link rel="stylesheet" href="static/css/angular-gridster.min.css" async defer/>
+    <link rel="stylesheet" href="static/css/select.css" async defer/>
+    <!-- Modernizr -->
+    <script src="/static/js/modernizr.js" async defer></script>
+    <!-- Angular async module loader -->
+    <script type="text/javascript" src="static/js/angular-loader-1.5.7.min.js"></script>
+    <!-- Angular and-1.5.7 ng-libraries -->
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-1.5.7.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-cookies-1.5.7.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-animate-1.5.7.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-ui-router.js"></script>
+    <script type="text/javascript" src="static/js/d3.min.js"></script>
+    <script type="text/javascript" src="static/js/nv.d3.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-nvd3.min.js"></script>
+    <script type="text/javascript" src="static/js/colorbrewer.min.js"></script>
+    <script type="text/javascript" src="static/js/ngGallery.js"></script>
+    <script type="text/javascript" src="static/js/ng-table.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-aria.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-material.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-walkthrough-tpls.min.js"></script>
+    <script type="text/javascript" src="static/js/angular-sanitize.js"></script>
+    <script type="text/javascript" src="static/js/rzslider.js"></script>
+    <script type="text/javascript" src="static/js/select.js"></script>
+    <!-- AWS cognito-idp dependencies -->
+    <script src="/resources/jsbn.js"></script>
+    <script src="/resources/jsbn2.js"></script>
+    <script src="/resources/sjcl.js"></script>
+    <script src="/resources/moment.min.js"></script>
+    <!-- AWS and associated libraries -->
+    <script type="text/javascript" src="resources/aws-sdk-2.4.2.min.js"></script>
+    <script type="text/javascript" src="resources/aws-cognito-sdk.min.js"></script>
+    <script type="text/javascript" src="resources/amazon-cognito-identity.min.js"></script>
+    <script type="text/javascript" src="resources/aws-sdk-mobile-analytics.min.js"></script>
+    <script type="text/javascript" src="resources/amazon-cognito.min.js"></script>
+    <!-- Google Maps -->
+    <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+    <script type="text/javascript" src="static/js/dropzone.js"></script>
+    <script type="text/javascript">
+    Dropzone.autoDiscover = false;
+    </script>
+    <!-- App Components -->
+    <script src="/static/js/angular-gridster.min.js"></script>
+    <script src="/static/js/crossfilter.min.js"></script>
+    <script src="/static/js/dc.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwJYYU7ozkbUn1KbnkuB_NGO1zETWeovg&libraries=places,drawing,geometry"></script>
+    <style type="text/css">
+    body .dz-default.dz-message span {
+        display: none !important;
+        opacity: 0;
+    }
+    </style>
+</head>
+
+<body walkthrough wt-start="startWalkthrough" wt-next="wtNext" wt-prev="wtPrev" wt-cancel="wtCancel" wt-active="wtActive" id="body" class="dropzone dz-message" style="margin: 0; border: 0; padding: 0;">
+    <div ui-view="" style="display:flex; min-height: 100%; flex-direction: column;" ng-cloak>
+        <!--         <div id="spinner" style="position: fixed; left: 50%; top: 50%;" >
+ -->
+        <!--         <div ui-view="header"></div> -->
+        <!--         <main class="cd-main-content"> -->
+        <!--             <div ui-view="nav"></div> -->
+        <!--             <div ui-view="main"></div> -->
+        <!--         </main> -->
+        <!-- <div ui-view="footer"></div>  -->
+    </div>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,277 @@
+<link rel="stylesheet" href="/static/css/mosaic-style.css">
+<style>
+.app-modal-window .modal-dialog {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+  color: white;
+}
+
+.controls {
+  display: hidden;
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 2px 2px 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 31px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.gm-tilt {
+  display: none;
+}
+
+/*a[ng-click]{
+    cursor: pointer;
+}*/
+</style>
+<div id="header" class="panel navbar with-nav-tabs panel-default" style="height:75px initial auto;min-height:75px;width:100%;padding:0px;margin:0px">
+  <div ng-cloak class="panel-heading">
+    <div class="form-group col-sm-12">
+      <ul class="nav nav-tabs col-sm-7">
+        <a class="navbar-brand" href="https://www.skycision.com/" style="height:24px;margin-right:50px;">
+          <img alt="Brand" src="/static/img/portfolio/styled-logo-small.png" style="height:24px">
+        </a>
+        <li ng-repeat="tabb in mc.tabs" ng-class="{active: mc.isCurrent(tabb.tabId)}">
+          <a ng-click="mc.setTab(tabb.tabId)" href="" data-toggle="toggle">{{tabb.title}}</a>
+        </li>
+        <li ng-if="clients.length > 0">
+          <a class="dropdown-toggle" href="" data-toggle="dropdown">My Farms  <span class="badge" style="margin:0 7px 0 7px;">{{clients.length}}</span><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="cl in clients"><a href ng-click="$event.preventDefault();farmSelected(cl.clientId)" ng-bind="cl.clientName"></a></li>
+            <li role="separator" class="divider"></li>
+            <li reuse-modal use-ctrl="CreateFarmController" instance-template="users.create-farm.view.html">&plus; New Farm</li>
+          </ul>
+        </li>
+        <!-- clients-dropdown -->
+      </ul>
+      <ul class="nav nav-tabs col-sm-3" ng-show="!!currentFarm">
+        <li>
+          <h5 style="height:25px;margin: 16px 0;width:" ><span class="label label-default" ng-bind="currentFarm.farmName"></span></h5></li>
+        <li ng-class="{active: mc.isCurrent(5)}"><a ng-click="mc.setTab(5)" data-toggle="toggle">Edit</a></li>
+      </ul>
+      <ul class="nav nav-tabs navbar-right">
+        <ul id="user-tab" class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle" href="" data-toggle="dropdown">{{user.firstName+' '+user.lastName+' '}}<span class="caret" style="margin-right:10px;"></span></a>
+            <ul id="login-dp" class="dropdown-menu">
+              <li role="presentation" class="disabled btn-group">
+                <a title="Coming soon"><span class="glyphicon glyphicon-cog" style="margin-right:15px"></span> Account & Settings</a>
+              </li>
+              <li role="presentation" class="disabled btn-group">
+                <a title="Coming soon" href=""><span class="glyphicon glyphicon-envelope" style="margin-right:15px"></span> Contact Support</a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <div class="row">
+                  <div class="col-md-12">
+                    <form>
+                    <!-- <button class="btn btn-block btn-social btn-google-plus" google-signin after-signin="signedIn(auth2)" style="height:40px;"></button> -->
+                      <div class="form-group">
+                        <button id="signOut" class="btn btn-primary btn-block" ng-click="signOut()">Sign Out</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <!-- /.user-tab -->
+      </ul>
+      <!-- /.navbar nav-tabs -->
+    </div>
+  </div>
+  <div ng-cloak class="panel-body">
+    <div id="nav-tab-content" class="tab-content">
+      <div class="tab-pane" id="maps" ng-class="{active: mc.current === 1}" ng-if="currentFarm">
+        <div class="container-fluid" id="control-container">
+          <div class="col-xs-8" id="control-div">
+            <div class="col-xs-4">
+              <select class="form-control" id="batch-select" ng-model="data.batch" ng-click="batchSelected(data.batch)" ng-options="batch as batch.batchName for batch in currentFarm.batches" value="{{batch | json}}">
+                <option value="">Select Batch</option>
+              </select>
+            </div>
+            <div class="col-xs-2">
+              <select class="form-control" name="imageTypeSelect" id="imageTypeSelect" ng-model="data.imageTypeSelect" ng-options="type.string as type.name disable when type.notAnOption for type in data.typeOptions" ng-required>
+                <option value="">Select Type</option>
+                <!-- not selected / blank option -->
+              </select>
+            </div>
+            <div class="col-xs-2">
+              <label ng-class="{'btn':true, 'btn-primary':true, 'btn-block':true, 'disabled': !data.imageTypeSelect}" id="load-btn" ng-click="loadTiles(data.batch,data.imageTypeSelect);$event.stopPropagation()">Load</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="flights" ng-class="{active: mc.isCurrent(2)}"></div>
+      <div class="tab-pane" id="weather" ng-class="{active: mc.isCurrent(3)}"></div>
+      <div class="tab-pane" id="editfarm" ng-class="{active: mc.isCurrent(5)}">
+        <div class="container-fluid" style="overflow: visible;">
+          <div class="col-xs-8" ng-switch="addMode">
+            <div class="col-xs-2" ng-switch-when="false">
+              <input type="button" class="btn btn-default btn-block" ng-click="startFarmLayout()" value="Add Field">
+            </div>
+            <div class="col-xs-4" ng-switch-when="true">
+              <form class="input-group" name="addfieldform" novalidate>
+                <input name="name" type="text" class="form-control" ng-model="newFieldName" ng-model-options="{updateOn: 'default blur'}" placeholder="Field Name" required ng-minlength="3" ng-maxlength="15" autocomplete="off">
+                <span class="input-group-btn">
+              <button ng-class="{
+                  'btn': true,
+                  'btn-block': true,
+                  'btn-default': !addfieldform.name.$error.required,
+                  'btn-danger': addfieldform.name.$error.minlength || addfieldform.name.$error.maxlength,
+                  'btn-success': fieldInProgress && addfieldform.name.$valid,
+                  'disabled': addfieldform.$valid == false || fieldInProgress == false}"
+                ng-click="$event.stopPropagation(); (addfieldform.$valid && fieldInProgress) ? mc.confirmField(addfieldform.name.$modelValue) : angular.noop()">
+                <span ng-class="{
+                  'glyphicon': true,
+                  'glyphicon-ok': (addfieldform.$valid === true),
+                  'glyphicon-remove-circle': (addfieldform.$valid === false)}">
+                </span></button>
+                </span>
+
+              </form>
+            </div>
+          </div>
+          <div class="container-fluid" style="position:fixed;top:125px;" ng-if="addMode">
+            <div class="alert alert-warning fade in alert-dismissible" role="alert" ng-show="addfieldform.name.$error.minlength || addfieldform.name.$error.maxlength">
+              <button type="button" data-dismiss="alert" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Please enter a field name between 3 and 15 characters.
+            </div>
+            <div class="alert alert-info fade in alert-dismissible" role="alert" ng-hide="fieldInProgress">
+              <button type="button" data-dismiss="alert" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <strong>Click</strong> at least three points on the map to define a field.
+            </div>
+          </div>
+          <div class="col-xs-2 pull-right" ng-show="savedFields !== false">
+            <label type="button" class="btn btn-success btn-block" ng-click="generateFields()">Confirm Fields</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.modal -->
+<div ng-cloak class="modal fade fast" id="dialog" tabindex='-1' data-keyboard="true" ng-if="user">
+  <div class="modal-dialog" id="zoom-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: 0px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modalViewTitle">Detail View</h4>
+      </div>
+      <!-- /.modal-header -->
+      <div class="modal-body">
+        <div class="container-fluid" id="zoom-container">
+          <!-- <div class="row"> -->
+          <div class="col-xs-4" style="padding-left:0px;padding-right:2rem;">
+            <div id="zoom-thumb-div" class="row-xs-4">
+              <img class="data-zoom-image" src="" id="zoom-thumb-img">
+            </div>
+            <!-- /.zoom-thumb-div -->
+            <div class="panel panel-default" style="width: 100%;" id="infoPanel">
+              <div class="panel-heading">
+                <h3 class="panel-title">Tile Info</h3>
+              </div>
+              <div class="panel-body">
+                <dl class="dl-horizontal">
+                  <dt>Latitude</dt>
+                  <dd id="modalLatitude">...</dd>
+                  <dt>Longitude</dt>
+                  <dd id="modalLongitude">...</dd>
+                  <dt>Altitude</dt>
+                  <dd id="modalAltitude">...</dd>
+                  <dt>Heading</dt>
+                  <dd id="modalHeading">...</dd>
+                </dl>
+              </div>
+            </div>
+            <!-- /.panel panel-default -->
+          </div>
+          <!-- /.col-lg-4 -->
+          <div id="zoom-full-div" class="col-xs-8" style="background: rgba(0,0,0,0.2) url('/static/img/loading.svg') no-repeat center center;">
+            <div style="color: white; text-align: center; font-family: 'Helvetica Neue'; font-size:20px">
+              Hover over the thumbnail to view full resolution
+              <br /> Use the scrollwheel to zoom
+              <br /> Press ESC to return to the map
+            </div>
+          </div>
+          <!-- /.zoom-full-div -->
+        </div>
+        <!-- /.zoom-container -->
+      </div>
+      <!-- /.modal-body -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->
+<style>
+
+#autocomplete-input {
+  background-color: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 300px;
+}
+
+#autocomplete-input:focus {
+  border-color: #4d90fe;
+}
+
+.pac-container {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#type-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  padding: 5px 11px 0px 11px;
+}
+
+#type-selector label {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+}
+#map-wrapper {
+  -webkit-flex: 1; /* Safari 6.1+ */
+  -ms-flex: 1; /* IE 10 */ 
+  flex: 1;
+  min-height:100%;
+  max-height: 100%;
+}
+</style>
+<div id="map-wrapper">
+  <input ng-cloak id="autocomplete-input" class="gm-style-mtc controls" type="text" placeholder="Where to?" ng-show="map" style="position: absolute; top:-50;left:0;">
+	<div id="map" ng-show="map" ></div>
+	<div id="spinner" style="position:fixed; left: 50%; top:50%;" ng-if="!map">
+		<large><i class="fa fa-spinner fa-spin spin-big"></i></large>
+	</div>
+</div>
+<script type="text/javascript">
+  function initialize() {
+    document.getElementById('map').style.height = document.getElementById('map-wrapper').clientHeight+ 'px';
+  };
+  function onResize() {
+      initialize();
+  };
+  google.maps.event.addDomListener(window, 'load', initialize);
+  
+
+  var a;
+  $(window).on('resize', function(event) {
+    console.log('resize triggered')
+      clearTimeout(a);
+      a = setTimeout(onResize, 50);
+  });
+  </script>
+<div id="footer-empty" style="height:0px;"></div>
